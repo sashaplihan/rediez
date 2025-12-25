@@ -1,0 +1,22 @@
+# Системные файлы
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Логи
+*.log
+npm-debug.log*
+
+# Зависимости (если используешь сборщики или пакеты)
+node_modules/
+vendor/
+.bower/
+
+# Файлы IDE и редакторов
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Результаты компиляции (если используешь SASS/LESS)
+.sass-cache/
