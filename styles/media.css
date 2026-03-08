@@ -1,0 +1,789 @@
+@media only screen and (max-width : 1200px) {
+	.events__bottom {
+		flex-direction: column;
+		align-items: start;
+		gap: 5px;
+	}
+	.artisan__bottom {
+		flex-direction: column;
+		align-items: start;
+		gap: 5px;
+	}
+	.musician-card__contact {
+		margin: 20px 0 0 0;
+	}
+}
+
+@media only screen and (max-width : 1024px) {
+	.hero__title {
+		font-size: 2rem;
+		margin: 0 0 20px 0;
+	}
+	.hero__subtitle {
+    	font-size: 1.5rem;
+	}
+	.musicians__info {
+		min-height: 150px;
+	}
+	.cta__content {
+		flex-direction: column;
+		margin: 40px 0;
+	}
+	.cta__title {
+		border: none;
+	}
+	.cta__text {
+		align-items: start;
+	}
+	.cta__button {
+		border-left: none;
+	}
+	.cta__icon {
+		width: 30px;
+	}
+	.title,
+	.musicians__title,
+	.events__title,
+	.poster__title,
+	.news__title {
+		font-size: 1.5rem;
+	}
+	.events {
+		padding: 40px 0;
+	}
+	.advantages__grid {
+		display: block;
+	}
+	.advantages__block {
+		margin: 0 0 20px 0;
+	}
+	.advantages__block:last-child {
+		margin: 0;
+	}
+	.musicians__name,
+	.events__name,
+	.poster-slide__name,
+	.news__name,
+	.filters__title {
+		font-size: 1.2rem;
+	}
+	.poster-slide__date.date,
+	.events__date.date {
+		gap: 8px;
+	}
+	.news__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.filters {
+		flex: 0 0 25%;
+	}
+	.search-section {
+		max-width: 310px;
+		min-width: 180px;
+	}
+	.musicians-catalog__item {
+		flex: 0 0 calc(33.33% - 7px);
+	}
+	.musician-detail__left {
+		flex: 0 0 calc(40% - 40px);
+	}
+	.musician-detail__right {
+		flex: 0 0 60%;
+	}
+	.musician-card__title.title,
+	.event-card__title.title {
+		font-size: 1.5rem;
+	}
+	.musician-detail__grid {
+		margin: 20px 0;
+	}
+	.events-catalog__items {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.news__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.poster__item {
+		flex: 0 0 calc(33.33% - 10px);
+	}
+	.events__bottom {
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+	}
+	.artisan__bottom {
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+	}
+	.musicians__header,
+	.events__header,
+	.poster__header,
+	.news__header {
+		margin: 0 0 30px;
+	}
+	.cta__title {
+		flex: 0;
+	}
+	.cta__name.title {
+		margin: 0;
+	}
+	.cta__content {
+		gap: 30px;
+	}
+}
+
+@media only screen and (max-width : 992px) {
+    body.lock {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+	.header__wrapper {
+		padding: 10px 0;
+		-webkit-box-pack: normal;
+		-ms-flex-pack: normal;
+		justify-content: normal;
+	}
+	.header__logo {
+		width: 120px;
+		order: 1;
+	}
+	.header__btn {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 36px;
+		height: 30px;
+		margin: 0;
+		padding: 7px;
+		border: 1px solid var(--color-accent);
+		border-radius: 10px;
+		z-index: 2;
+		order: 3;
+	}
+	.header__btn.active {
+		width: 30px;
+		height: 30px;
+		padding: 5px;
+		border-radius: 16px;
+	}
+	.header__auth {
+		-webkit-box-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		-webkit-box-pack: end;
+		-ms-flex-pack: end;
+		justify-content: flex-end;
+		margin: 0 10px 0 0;
+		order: 2;
+	}
+    /* Бургер */
+    .header__burger {
+        display: block;
+        position: relative;
+        width: 20px;
+        height: 15px;
+        background-color: transparent;
+        z-index: 200;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    .header__burger:hover {
+        transform: scale(1.1);
+    }
+    .header__burger span,
+    .header__burger:before,
+    .header__burger:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--color-accent);
+        transition: all 0.35s ease;
+        border-radius: 1px;
+    }
+    .header__burger span {
+        top: 6px;
+    }
+    .header__burger:before {
+        top: 0;
+    }
+    .header__burger:after {
+        bottom: 1px;
+    }
+    .header__burger.active {
+        position: relative;
+        transform: none !important;
+    }
+    .header__burger.active span {
+        transform: scaleX(0);
+    }
+    .header__burger.active:before {
+        transform: rotate(45deg);
+        top: 6px;
+    }
+    .header__burger.active:after {
+        transform: rotate(-45deg);
+        bottom: 7px;
+    }
+    /* Мобильное меню */
+    .header__nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        background-color: #232323;
+        padding: 80px 10% 20px 20px;
+        overflow-y: auto;
+        transition: left 0.4s ease;
+        -webkit-overflow-scrolling: touch;
+    }
+    .header__nav.active {
+        left: 0;
+    }    
+    ul.nav-menu {
+        display: block;
+    }
+    .header__nav .nav-menu > li {
+        flex-wrap: wrap;
+		padding: 10px 0;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.3s ease;
+    }
+    .header__nav.active .nav-menu > li {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    /* Каскадная анимация пунктов меню */
+    .header__nav.active .nav-menu > li:nth-child(1) { transition-delay: 0.1s; }
+    .header__nav.active .nav-menu > li:nth-child(2) { transition-delay: 0.15s; }
+    .header__nav.active .nav-menu > li:nth-child(3) { transition-delay: 0.2s; }
+    .header__nav.active .nav-menu > li:nth-child(4) { transition-delay: 0.25s; }
+    .header__nav.active .nav-menu > li:nth-child(5) { transition-delay: 0.3s; }
+    .header__nav.active .nav-menu > li:nth-child(6) { transition-delay: 0.35s; }
+
+    .header__nav .nav-menu > li:last-child {
+        margin-bottom: 0;
+    }
+    .header__nav .nav-menu > li > a {
+        font-size: 18px;
+        color: #ffffff;
+        transition: color 0.3s ease;
+        display: inline-block;
+    }
+    .header__nav .nav-menu > li > a.active {
+        color: var(--color-accent);
+    }
+	/* Hero block */
+	.hero {
+		padding: 100px 0 60px;
+	}
+	.hero__left {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+	.hero__right {
+		flex: 0 0 100%;
+		max-width: 100%;
+		padding: 1.5rem 2rem;
+	}
+	.hero__text {
+		font-size: 1rem;
+		margin: 0 0 20px 0;
+	}
+	.hero__text ul {
+		margin: 10px 0 0 0;
+	}
+	/* Event block */
+	.events__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.footer__wrap{
+		justify-content: normal;
+		flex-wrap: wrap;
+		gap: 15px;
+		padding: 0;
+	}
+	.footer__column {
+		flex: 0 0 calc(50% - 10px);
+	}
+	.footer__logo img {
+		max-width: 120px;
+	}
+	.payments,
+	.documents {
+		flex: 0 0 100%;
+	}
+	.payments__link img {
+		width: auto;
+		height: 45px;
+	}
+	.social-list__icon {
+		width: 36px;
+		height: 36px;
+	}
+	.footer__bottom {
+		padding: 20px 0 10px;
+	}
+	.social-list {
+		gap: 10px;
+	}
+	.footer__copyright {
+		padding: 10px 0 20px;
+	}
+	.copyright {
+		padding: 0;
+	}
+	.breadcrumbs {
+		margin: 70px 0 0 0;
+	}
+	.kama_breadcrumbs {
+		padding: 1rem 0;
+	}
+	.title {
+		margin: 0 0 20px 0;
+	}
+	.filters {
+		flex: 0 0 33%;
+	}
+	.filter-group--price {
+		margin-bottom: 2rem;
+	}
+	.filter-group__title {
+		font-size: 14px;
+	}
+	.price-range__inputs {
+		gap: 8px;
+	}
+	.price-range__input {
+		padding: 10px 50px 10px 12px;
+		font-size: 12px;
+	}
+	.price-range__currency {
+		font-size: 12px;
+	}
+	.title_link {
+		font-size: 14px;
+	}
+	.controls__inner {
+		justify-content: end;
+	}
+	.musicians-catalog__item {
+		flex: 0 0 calc(50% - 5px);
+	}
+	.musician-detail__grid {
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+	.musician-detail__left {
+		flex: 0 0 100%;
+	}
+	.musician-detail__left img {
+		aspect-ratio: 5 / 2.5;
+	}
+	.musician-detail__right {
+		flex: 0 0 100%;
+	}
+	.events-catalog__items {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.musician-card__title.title,
+	.event-card__title.title {
+		margin: 0;
+	}
+	.poster__link.title_link,
+	.cta__link.title_link {
+		font-size: 12px;
+		padding: 13px 50px;
+	}
+}
+
+@media (max-width : 768px) {
+	.musician-catalog__filters {
+		max-width: 100%;
+		padding: 24px 20px;
+	}
+	.filters__title {
+		font-size: 20px;
+		margin-bottom: 24px;
+	}
+	.filter-group {
+		margin-bottom: 28px;
+	}
+	.filter-group__title {
+		font-size: 14px;
+	}
+	.filter__label {
+		font-size: 14px;
+	}
+	.price-range__input {
+		padding: 10px 44px 10px 12px;
+		font-size: 14px;
+	}
+	.musicians__title {
+		line-height: 1;
+	}
+	.title_link {
+		padding: 7px 25px 7px 15px;
+		line-height: 1.2;
+	}
+	.musicians__name,
+	.events__name,
+	.poster-slide__name,
+	.news__name {
+		font-size: 1rem;
+		line-height: 1.2em;
+		max-height: 1.2em;
+	}
+	.events__info {
+		padding: 15px;
+	}
+	.link-title .link-title__name {
+		font-size: 0.8rem;
+		line-height: 1.2;
+	}
+	.link-title .link-title__icon {
+		width: 12px;
+		height: 12px;
+	}
+	.musicians__price {
+		font-size: 0.9rem;
+	}
+	.musicians__info {
+		min-height: 140px;
+	}
+	/* Event block */
+	.events__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.musician-catalog__body, .events-catalog__body {
+		gap: 20px;
+		flex-wrap: wrap;
+	}
+	.filters {
+		flex: 0 0 100%;
+		width: 100%;
+	}
+	.filter__item {
+		margin-bottom: 5px;
+	}
+	.musician-catalog__filters,
+	.events-catalog__filters {
+		display: none;
+		padding: 10px 0px;
+	}
+	.musician-catalog__filters._active,
+	.events-catalog__filters._active {
+		display: block;
+		position: fixed;
+		overflow-y: scroll;
+		width: 100%;
+		height: 100vh;
+		padding: 2rem;
+		background: #232323;
+		top: 0;
+		left: 0;
+		z-index: 1001;
+		transition: all 1s ease-out;
+	}
+	.musician-catalog__filters._active .filters__close,
+	.events-catalog__filters._active .filters__close {
+		display: block;
+	}
+	.event-cart__countdown, .event-cart__accepted {
+		font-size: 0.9rem;
+	}
+	.event-detail__grid .date {
+		gap: 7px;
+	}
+	.event-card__description {
+		font-size: 14px;
+	}
+	.date .icom {
+		width: 10px;
+		height: 12px;
+	}
+	.event-detail__grid .date .icom img {
+		height: 12px;
+	}
+	.event-detail__grid .date span {
+		font-size: 0.8rem;
+	}
+	.tags span {
+		font-size: 0.9rem;
+	}
+	.event-cart__top {
+		padding: var(--text-margin);
+	}
+	.contact h2 {
+		font-size: 1.1rem;
+	}
+	.contact__top h2 {
+		margin: 0 0 10px 0;
+	}
+	.event-card__contact {
+		flex-direction: column;
+		justify-content: normal;
+		align-items: start;
+		gap: 15px;
+	}
+	.contact__top a {
+		font-size: 0.9rem;
+	}
+	.controls__inner {
+		justify-content: normal;
+		gap: 0;
+	}
+	.search-section {
+		flex: 0 0 100%;
+        max-width: 100%;
+        min-width: 180px;
+		order: 1;
+		margin: 0 0 10px 0;
+    }
+	.controls__sort {
+		width: 50%;
+		order: 2;
+	}
+	.controls__sort-icon {
+		display: block;
+		width: 25px;
+		height: 20px;
+		flex: 0 0 auto;
+		overflow: hidden;
+	}
+	.controls__sort-icon img {
+		width: auto;
+		height: 100%;
+	}
+	.controls__sort-input {
+		color: #ffffff;
+	}
+	.controls__sort-label {
+		display: none;
+	}
+	.musician-catalog__filter,
+	.events-catalog__filter {
+		display: flex;
+		justify-content: end;
+		width: 50%;
+		order: 3;
+	}
+	.controls__sort-input {
+		background: transparent;
+		border: none;
+		border-radius: 0;
+		padding: 8px 0px 8px 2px;
+	}
+	.controls__sort-select::after {
+		right: 20px;
+	}
+	.filter__wrap {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.filter__btn-icon {
+		width: 25px;
+		height: 20px;
+		overflow: hidden;
+	}
+	.filter__btn-icon img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.filter__btn-text {
+		font-size: 15px;
+		font-weight: 500;
+		line-height: 1.5;
+		color: #ffffff;
+	}
+	.news__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.poster__grid {
+		gap: 20px;
+	}
+	.poster__item {
+		flex: 0 0 calc(50% - 10px);
+	}
+	.musicians__navigation, .poster__navigation {
+		display: none;
+	}
+}
+@media only screen and (max-width : 576px) {
+	.header__wrapper {
+        padding: 10px 15px;
+    }
+	.hero__title {
+		font-size: 1.5rem;
+		margin: 0 0 20px 0;
+	}
+	.musicians__title {
+		font-size: 1.5rem;
+	}
+	.musicians__slider {
+		padding: 0 0 20px 0;
+	}
+	.footer__column {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+	.footer__content {
+		padding: 40px 15px;
+	}
+	.footer__bottom {
+        padding: 20px 15px 10px;
+    }
+	.payments__link img {
+		height: 32px;
+	}
+	.documents__nav {
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	.footer__copyright {
+		padding: 10px 15px 20px;
+	}
+	.cta__content {
+		height: 100%;
+        padding: 0 15px;
+    }
+	.breadcrumbs {
+		padding: 0 15px;
+	}
+	.musician-catalog, .events-catalog {
+		padding: 0 15px 40px 15px;
+	}
+	.event-detail__grid {
+		padding: 0 15px;
+	}
+	.event-cart__top {
+		justify-content: normal;
+		flex-wrap: wrap;
+		gap: 10px 20px;
+	}
+	.event-cart__date {
+		flex: 0 0 calc(50% - 20px);
+	}
+	.musician-detail__grid,
+	.musician-detail__tabs {
+		padding: 0 15px;
+	}
+	.controls__sort {
+		width: 60%;
+	}
+	.musician-catalog__filter,
+	.events-catalog__filter {
+		width: 40%;
+	}
+	.controls__sort {
+		gap: 5px;
+	}
+	.news-catalog,
+	.poster-catalog {
+		padding: 0 15px 40px 15px;
+	}
+	.article-detail__grid {
+		padding: 0 15px;
+	}
+	.article-detail__info img {
+		aspect-ratio: 3 / 2;
+	}
+	.musician-card__top,
+	.event-card__top {
+		align-items: start;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.musician-card__price,
+	.event-card__price {
+		flex: 0 0 auto;
+	}
+	.event-detail__grid .date {
+        flex: 0 0 100%;
+    }
+	.contact__wrap {
+		flex-direction: column;
+		align-items: start;
+		gap: 10px;
+	}
+	.hero_link {
+		width: 100%;
+		text-align: center;
+	}
+	.cta__icon {
+		flex: 0 0 40px;
+        width: 40px;
+    }
+}
+
+@media only screen and (max-width : 480px) {
+	.auth-btn {
+		padding: 5px 5px;
+	}
+	.events__item {
+		min-height: 175px;
+	}
+	.events__grid {
+		grid-template-columns: repeat(1, 1fr);
+	}
+	.advantage {
+		flex-direction: column;
+	}
+	.advantage__title,
+	.advantage__text {
+		text-align: center;
+	}
+	.news__grid {
+		grid-template-columns: repeat(1, 1fr);
+	}
+	.tags {
+		flex-wrap: wrap;
+		gap: 10px;
+		margin: var(--text-margin);
+	}
+	.event-card__description {
+		margin: var(--text-margin);
+	}
+	.event-cart__top {
+		gap: 5px;
+	}
+	.event-cart__bottom {
+		display: block;
+		margin: var(--text-margin);
+	}
+	.events-catalog__items {
+		grid-template-columns: repeat(1, 1fr);
+	}
+	.poster__item {
+		flex: 0 0 100%;
+	}
+	.pagination__page {
+		min-width: 30px;
+		height: 30px;
+		padding: 0 10px;
+	}
+	.pagination__arrow {
+		width: 30px;
+		height: 30px;
+	}
+	.musicians__bottom {
+		flex-direction: column;
+		align-items: start;
+		gap: 5px;
+	}
+	.artisan__bottom {
+		flex-direction: column;
+		align-items: start;
+		gap: 5px;
+	}
+}

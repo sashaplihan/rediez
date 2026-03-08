@@ -7,6 +7,34 @@
  * @package rediez
  */
 
+// Подключение Carbon Fields
+add_action( 'after_setup_theme', 'crb_load' );
+
+function crb_load() {
+    $autoload = __DIR__ . '/vendor/autoload.php';
+    
+    if ( !file_exists( $autoload ) ) {
+        die( "Ошибка: Автозагрузчик не найден по пути: " . $autoload );
+    }
+    
+    require_once( $autoload );
+    \Carbon_Fields\Carbon_Fields::boot();
+}
+
+// Подключение настроек
+add_action( 'carbon_fields_register_fields', 'register_carbon_fields' );
+
+function register_carbon_fields() {
+    $options_path = __DIR__ . '/carbon-fields-options/';
+
+    if ( file_exists( $options_path . 'theme-options.php' ) ) {
+        require_once( $options_path . 'theme-options.php' );
+    }
+    if ( file_exists( $options_path . 'post-meta.php' ) ) {
+        require_once( $options_path . 'post-meta.php' );
+    }
+}
+
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
 	define( '_S_VERSION', '1.0.0' );
@@ -14,10 +42,6 @@ if ( ! defined( '_S_VERSION' ) ) {
 
 /**
  * Sets up theme defaults and registers support for various WordPress features.
- *
- * Note that this function is hooked into the after_setup_theme hook, which
- * runs before the init hook. The init hook is too late for some features, such
- * as indicating support for post thumbnails.
  */
 function rediez_setup() {
 	/*
@@ -49,7 +73,8 @@ function rediez_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'menu-1' => esc_html__( 'Primary', 'rediez' ),
+			'header_menu' => esc_html__( 'Primary', 'rediez' ),
+			'footer_menu' => esc_html__( 'Footer', 'rediez' ),
 		)
 	);
 
@@ -102,6 +127,17 @@ function rediez_setup() {
 }
 add_action( 'after_setup_theme', 'rediez_setup' );
 
+// Register new post type:
+$inc_files = array(
+    'custom_post_type_musicians.php',
+    'custom_post_type_events.php',
+	'custom_post_type_poster.php',
+);
+
+foreach ( $inc_files as $file ) {
+    require_once get_template_directory() . '/inc/' . $file;
+}
+
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
  *
@@ -137,17 +173,68 @@ add_action( 'widgets_init', 'rediez_widgets_init' );
 /**
  * Enqueue scripts and styles.
  */
-function rediez_scripts() {
-	wp_enqueue_style( 'rediez-style', get_stylesheet_uri(), array(), _S_VERSION );
-	wp_style_add_data( 'rediez-style', 'rtl', 'replace' );
+function rediez_style() {
+	wp_enqueue_style( 'rediez-fonts', get_template_directory_uri() . '/styles/font.css', array(), _S_VERSION );
 
-	wp_enqueue_script( 'rediez-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+	wp_enqueue_style( 'rediez-swiper-style', get_template_directory_uri('rediez-fonts') .'/libs/swiper/swiper-bundle.min.css');
 
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
+	wp_enqueue_style( 'rediez-micromodal-style', get_template_directory_uri('rediez-fonts') .'/libs/micromodal/micromodal.css');
+
+	wp_enqueue_style( 'rediez-bootstrap', get_template_directory_uri('rediez-fonts') .'/libs/bootstrap/css/bootstrap.min.css');
+
+	wp_enqueue_style( 'rediez-style', get_stylesheet_uri(), array('rediez-fonts'), _S_VERSION );
+
+	wp_enqueue_style( 'rediez-style-media', get_template_directory_uri('rediez-fonts') .'/styles/media.css');
 }
+add_action( 'wp_enqueue_scripts', 'rediez_style' );
+
+function rediez_scripts() {
+
+	wp_enqueue_script( 'rediez-swiper', get_template_directory_uri() . '/libs/swiper/swiper-bundle.min.js', array(), '', true);
+
+	wp_enqueue_script( 'rediez-micromodal', get_template_directory_uri() . '/libs/micromodal/micromodal.min.js', array(), '', true);
+    
+    wp_enqueue_script( 'rediez-price-range', get_template_directory_uri() . '/js/price-range.js', array(), '', true );
+
+    wp_enqueue_script( 'rediez-musicians-filters', get_template_directory_uri() . '/js/musicians-filters.js', array('rediez-price-range'), '', true );
+
+	wp_localize_script('rediez-musicians-filters', 'rediez_filters', [
+    'ajax_url' => admin_url('admin-ajax.php'),
+    'nonce'    => wp_create_nonce('musicians_filter_nonce'),
+	]);
+
+	wp_enqueue_script( 'rediez-events-filters',get_template_directory_uri() . '/js/events-filters.js', array('rediez-price-range'), '', true );
+
+	wp_localize_script( 'rediez-events-filters', 'rediez_events_filters', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce'    => wp_create_nonce( 'events_filter_nonce' ),
+	) );
+
+    wp_enqueue_script( 'rediez-common', get_template_directory_uri() . '/js/common.js', array('jquery', 'rediez-micromodal'), '', true );
+}
+
 add_action( 'wp_enqueue_scripts', 'rediez_scripts' );
+
+// Настройки ролей пользователей
+require_once get_template_directory() . '/inc/user-roles.php';
+
+// Подключение доработанного меню с помощью Walker
+require_once __DIR__ . '/inc/class-bem-menu-walker.php';
+
+// Подключение хлебных крошек
+require get_template_directory() . '/inc/breadcrumbs.php';
+
+// Подключение фильтров музыкантов
+require_once get_template_directory() . '/inc/ajax-musicians-filter.php';
+
+// Подключение фильтров ивентов
+require_once get_template_directory() . '/inc/ajax-events-filter.php';
+
+// Подключение сортировки архива музыкантов
+require get_template_directory() . '/inc/archive-filters.php';
+
+// Подключение файла со вспомогательными функциями
+require get_template_directory() . '/inc/helpers.php';
 
 /**
  * Implement the Custom Header feature.
@@ -182,3 +269,17 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+
+// Передаём URL профиля в JavaScript
+function rediez_um_profile_url() {
+    ?>
+    <script type="text/javascript">
+        var umProfileUrl = '<?php echo esc_url( um_get_core_page('user') ); ?>';
+        var umAccountUrl = '<?php echo esc_url( um_get_core_page('account') ); ?>';
+    </script>
+    <?php
+}
+add_action('wp_footer', 'rediez_um_profile_url');
+
+// Подключение кастомных настроек админ-бара
+require_once get_template_directory() . '/inc/admin-bar-bottom.php';
