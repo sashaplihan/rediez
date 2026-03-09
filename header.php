@@ -71,29 +71,33 @@
 
 					<div class="header__auth">
 						<?php if ( is_user_logged_in() ) : 
-							$user_id = get_current_user_id();
-							
-							if ( function_exists('um_user_profile_url') ) {
-								$profile_url = um_user_profile_url( $user_id );
-							} elseif ( function_exists('um_get_core_page') ) {
-								$profile_url = get_permalink( um_get_core_page('account') );
+							$user        = wp_get_current_user();
+							$is_musician = in_array( 'um_musician', (array) $user->roles );
+							$is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
+
+							if ( $is_musician ) {
+								$profile_url  = admin_url( 'edit.php?post_type=rediez_musicians' );
+								$account_text = 'Мой профиль';
+							} elseif ( $is_eventer ) {
+								$profile_url  = admin_url( 'edit.php?post_type=rediez_events' );
+								$account_text = 'Мои мероприятия';
 							} else {
-								$profile_url = admin_url('profile.php');
+								// Админ
+								$profile_url  = admin_url();
+								$account_text = 'Админ панель';
 							}
-							
-							$account_text = carbon_get_theme_option( 'crb_auth_account_text' ) ?: 'Личный кабинет';
 							?>
-							
+
 							<a href="<?php echo esc_url( $profile_url ); ?>" class="auth-btn auth-btn--account">
 								<?php echo esc_html( $account_text ); ?>
 							</a>
-							
+
 						<?php else : ?>
-							
+
 							<button type="button" class="auth-btn auth-btn--login" data-micromodal-trigger="modal-auth">
 								<?php echo esc_html( carbon_get_theme_option( 'crb_auth_login_text' ) ?: 'Вход | Регистрация' ); ?>
 							</button>
-							
+
 						<?php endif; ?>
 					</div>
 

@@ -272,14 +272,25 @@ if ( class_exists( 'WooCommerce' ) ) {
 
 // Передаём URL профиля в JavaScript
 function rediez_um_profile_url() {
+    $user        = wp_get_current_user();
+    $is_musician = in_array( 'um_musician', (array) $user->roles );
+    $is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
+
+    if ( $is_musician ) {
+        $profile_url = admin_url( 'edit.php?post_type=rediez_musicians' );
+    } elseif ( $is_eventer ) {
+        $profile_url = admin_url( 'edit.php?post_type=rediez_events' );
+    } else {
+        $profile_url = admin_url();
+    }
     ?>
     <script type="text/javascript">
-        var umProfileUrl = '<?php echo esc_url( um_get_core_page('user') ); ?>';
-        var umAccountUrl = '<?php echo esc_url( um_get_core_page('account') ); ?>';
+        var umProfileUrl = '<?php echo esc_url( $profile_url ); ?>';
+        var umAccountUrl = '<?php echo esc_url( admin_url() ); ?>';
     </script>
     <?php
 }
-add_action('wp_footer', 'rediez_um_profile_url');
+add_action( 'wp_footer', 'rediez_um_profile_url' );
 
 // Подключение кастомных настроек админ-бара
 require_once get_template_directory() . '/inc/admin-bar-bottom.php';

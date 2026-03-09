@@ -24,13 +24,6 @@ function custom_post_type_events() {
         'use_featured_image'    => 'Использовать изображение',
     );
 
-    $rewrite = array(
-        'slug'       => 'events',
-        'with_front' => true,
-        'pages'      => false,
-        'feeds'      => false,
-    );
-
     $args = array(
         'label'               => 'Мероприятия',
         'labels'              => $labels,
@@ -48,11 +41,16 @@ function custom_post_type_events() {
         'exclude_from_search' => false,
         'publicly_queryable'  => true,
         'query_var'           => 'events',
-        'rewrite'             => $rewrite,
-        'capability_type'     => 'post',
+        'rewrite'             => array(
+            'slug'       => 'events',
+            'with_front' => true,
+            'pages'      => false,
+            'feeds'      => false,
+        ),
+        'capability_type'     => array( 'eventer_post', 'eventer_posts' ),
+        'map_meta_cap'        => true,
     );
 
     register_post_type( 'rediez_events', $args );
 }
-
 add_action( 'init', 'custom_post_type_events', 0 );

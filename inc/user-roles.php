@@ -1,119 +1,103 @@
 <?php
 /**
  * Роли пользователей: музыкант и ивентер
+ * Подключить в functions.php:
+ * require_once get_template_directory() . '/inc/user-roles.php';
  *
  * @package rediez
  */
 
-// 1. РЕГИСТРАЦИЯ РОЛЕЙ
-function rediez_register_user_roles() {
-
-    // Роль: Музыкант
-    if ( ! get_role( 'um_musician' ) ) {
-        add_role( 'um_musician', 'Музыкант', array(
-            'read'                          => true,
-            'upload_files'                  => true,
-
-            // Права на свои записи rediez_musicians
-            'edit_rediez_musicians'         => true,
-            'read_rediez_musicians'         => true,
-            'delete_rediez_musicians'       => false,
-
-            // Публиковать нельзя — только pending
-            'publish_rediez_musicians'      => false,
-        ) );
-    }
-
-    // Роль: Ивентер
-    if ( ! get_role( 'um_eventer' ) ) {
-        add_role( 'um_eventer', 'Ивентер', array(
-            'read'                       => true,
-            'upload_files'               => true,
-
-            // Права на свои записи rediez_events
-            'edit_rediez_events'         => true,
-            'read_rediez_events'         => true,
-            'delete_rediez_events'       => true,
-
-            // Публиковать нельзя — только pending
-            'publish_rediez_events'      => false,
-        ) );
-    }
-}
-add_action( 'after_setup_theme', 'rediez_register_user_roles' );
-
-
 // ========================================
-// 2. ПРАВА CPT ДЛЯ КАСТОМНЫХ РОЛЕЙ
-// WordPress использует capability_type для проверки прав
-// Нужно явно разрешить роли редактировать свои записи
+// 1. ПРАВА РОЛЕЙ
+// Добавляем капабилити под наш кастомный capability_type
+// Запускается при каждой загрузке — проверяет наличие прав
 // ========================================
-function rediez_map_custom_caps( $caps, $cap, $user_id, $args ) {
-
-    $user = get_userdata( $user_id );
-    if ( ! $user ) return $caps;
+function rediez_add_role_capabilities() {
 
     // --- Музыкант ---
-    if ( in_array( 'um_musician', (array) $user->roles ) ) {
-
-        // Разрешаем создавать/редактировать свои записи музыканта
-        if ( in_array( $cap, array( 'edit_post', 'edit_posts', 'edit_rediez_musicians' ) ) ) {
-
-            // Если редактирует конкретную запись — проверяем что она его
-            if ( ! empty( $args[0] ) ) {
-                $post = get_post( $args[0] );
-                if ( $post && $post->post_author == $user_id && $post->post_type === 'rediez_musicians' ) {
-                    $caps = array( 'exist' );
-                }
-            } else {
-                $caps = array( 'exist' );
-            }
-        }
+    $musician = get_role( 'um_musician' );
+    if ( $musician ) {
+        // Права для rediez_musicians (capability_type: musician_post / musician_posts)
+        $musician->add_cap( 'read' );
+        $musician->add_cap( 'upload_files' );
+        $musician->add_cap( 'edit_musician_post' );      // редактировать свою запись
+        $musician->add_cap( 'edit_musician_posts' );     // видеть список
+        $musician->add_cap( 'edit_others_musician_posts', false );   // чужие — нет
+        $musician->add_cap( 'publish_musician_posts', false );       // публиковать — нет
+        $musician->add_cap( 'read_private_musician_posts', false );  // приватные — нет
+        $musician->add_cap( 'delete_musician_post', false );         // удалять — нет
+        $musician->add_cap( 'delete_musician_posts', false );
     }
 
     // --- Ивентер ---
-    if ( in_array( 'um_eventer', (array) $user->roles ) ) {
-
-        if ( in_array( $cap, array( 'edit_post', 'edit_posts', 'edit_rediez_events' ) ) ) {
-
-            if ( ! empty( $args[0] ) ) {
-                $post = get_post( $args[0] );
-                if ( $post && $post->post_author == $user_id && $post->post_type === 'rediez_events' ) {
-                    $caps = array( 'exist' );
-                }
-            } else {
-                $caps = array( 'exist' );
-            }
-        }
+    $eventer = get_role( 'um_eventer' );
+    if ( $eventer ) {
+        // Права для rediez_events (capability_type: eventer_post / eventer_posts)
+        $eventer->add_cap( 'read' );
+        $eventer->add_cap( 'upload_files' );
+        $eventer->add_cap( 'edit_eventer_post' );      // редактировать свою запись
+        $eventer->add_cap( 'edit_eventer_posts' );     // видеть список
+        $eventer->add_cap( 'edit_others_eventer_posts', false );   // чужие — нет
+        $eventer->add_cap( 'publish_eventer_posts', false );       // публиковать — нет
+        $eventer->add_cap( 'read_private_eventer_posts', false );  // приватные — нет
+        $eventer->add_cap( 'delete_eventer_post' );                // удалять свои — да
+        $eventer->add_cap( 'delete_eventer_posts' );
+        $eventer->add_cap( 'delete_others_eventer_posts', false ); // чужие — нет
     }
 
-    return $caps;
-}
-add_filter( 'map_meta_cap', 'rediez_map_custom_caps', 10, 4 );
+	// --- Администратор ---
+	$admin = get_role( 'administrator' );
+	if ( $admin ) {
+		// Права для rediez_musicians
+		$admin->add_cap( 'edit_musician_post' );
+		$admin->add_cap( 'edit_musician_posts' );
+		$admin->add_cap( 'edit_others_musician_posts' );
+		$admin->add_cap( 'publish_musician_posts' );
+		$admin->add_cap( 'read_private_musician_posts' );
+		$admin->add_cap( 'delete_musician_post' );
+		$admin->add_cap( 'delete_musician_posts' );
+		$admin->add_cap( 'delete_others_musician_posts' );
+		$admin->add_cap( 'delete_published_musician_posts' );
 
-// Убираем лишние пункты меню
+		// Права для rediez_events
+		$admin->add_cap( 'edit_eventer_post' );
+		$admin->add_cap( 'edit_eventer_posts' );
+		$admin->add_cap( 'edit_others_eventer_posts' );
+		$admin->add_cap( 'publish_eventer_posts' );
+		$admin->add_cap( 'read_private_eventer_posts' );
+		$admin->add_cap( 'delete_eventer_post' );
+		$admin->add_cap( 'delete_eventer_posts' );
+		$admin->add_cap( 'delete_others_eventer_posts' );
+		$admin->add_cap( 'delete_published_eventer_posts' );
+	}
+}
+add_action( 'init', 'rediez_add_role_capabilities' );
+
+
+// ========================================
+// 2. ЧИСТИМ АДМИНКУ ДЛЯ КАСТОМНЫХ РОЛЕЙ
+// ========================================
 function rediez_clean_admin_menu() {
 
     $user = wp_get_current_user();
 
+    // Администратор — не трогаем меню
+    if ( current_user_can( 'manage_options' ) ) return;
+
     if ( in_array( 'um_musician', (array) $user->roles ) ) {
 
-        // Оставляем только: Музыканты + Медиафайлы + Профиль
-        remove_menu_page( 'index.php' );                // Консоль
-        remove_menu_page( 'edit.php' );                 // Записи
-        remove_menu_page( 'edit.php?post_type=page' );  // Страницы
-        remove_menu_page( 'edit-comments.php' );        // Комментарии
-        remove_menu_page( 'themes.php' );               // Внешний вид
-        remove_menu_page( 'plugins.php' );              // Плагины
-        remove_menu_page( 'users.php' );                // Пользователи
-        remove_menu_page( 'tools.php' );                // Инструменты
-        remove_menu_page( 'options-general.php' );      // Настройки
-
-        // Убираем все CPT кроме музыкантов
+        remove_menu_page( 'index.php' );
+        remove_menu_page( 'edit.php' );
+        remove_menu_page( 'edit.php?post_type=page' );
+        remove_menu_page( 'edit-comments.php' );
+        remove_menu_page( 'themes.php' );
+        remove_menu_page( 'plugins.php' );
+        remove_menu_page( 'users.php' );
+        remove_menu_page( 'tools.php' );
+        remove_menu_page( 'options-general.php' );
         remove_menu_page( 'edit.php?post_type=rediez_events' );
         remove_menu_page( 'edit.php?post_type=rediez_poster' );
 
-        // Редирект на список своих записей при входе в админку
         global $pagenow;
         if ( $pagenow === 'index.php' ) {
             wp_redirect( admin_url( 'edit.php?post_type=rediez_musicians' ) );
@@ -132,8 +116,6 @@ function rediez_clean_admin_menu() {
         remove_menu_page( 'users.php' );
         remove_menu_page( 'tools.php' );
         remove_menu_page( 'options-general.php' );
-
-        // Убираем все CPT кроме событий
         remove_menu_page( 'edit.php?post_type=rediez_musicians' );
         remove_menu_page( 'edit.php?post_type=rediez_poster' );
 
@@ -148,19 +130,16 @@ add_action( 'admin_menu', 'rediez_clean_admin_menu', 999 );
 
 
 // ========================================
-// 4. ОГРАНИЧЕНИЕ: МУЗЫКАНТ МОЖЕТ СОЗДАТЬ
-// ТОЛЬКО 1 ЗАПИСЬ
+// 3. ОГРАНИЧЕНИЕ: МУЗЫКАНТ — ТОЛЬКО 1 ЗАПИСЬ
 // ========================================
 function rediez_limit_musician_posts( $data, $postarr ) {
 
-    // Только для новых записей музыкантов
     if ( $data['post_type'] !== 'rediez_musicians' ) return $data;
-    if ( ! empty( $postarr['ID'] ) ) return $data; // это обновление, не создание
+    if ( ! empty( $postarr['ID'] ) ) return $data;
 
     $user = wp_get_current_user();
     if ( ! in_array( 'um_musician', (array) $user->roles ) ) return $data;
 
-    // Считаем существующие записи этого пользователя
     $existing = get_posts( array(
         'post_type'      => 'rediez_musicians',
         'author'         => $user->ID,
@@ -170,7 +149,6 @@ function rediez_limit_musician_posts( $data, $postarr ) {
     ) );
 
     if ( ! empty( $existing ) ) {
-        // Блокируем создание — перенаправляем на существующую запись
         wp_die(
             '<p>У вас уже есть профиль музыканта. Вы можете <a href="' . get_edit_post_link( $existing[0] ) . '">редактировать его</a>.</p>',
             'Ограничение',
@@ -184,27 +162,23 @@ add_filter( 'wp_insert_post_data', 'rediez_limit_musician_posts', 10, 2 );
 
 
 // ========================================
-// 5. ПРИНУДИТЕЛЬНЫЙ СТАТУС PENDING
-// Музыкант и ивентер не могут публиковать сами
+// 4. ПРИНУДИТЕЛЬНЫЙ СТАТУС PENDING
 // ========================================
 function rediez_force_pending_status( $data, $postarr ) {
 
-    $user = wp_get_current_user();
-
+    $user        = wp_get_current_user();
     $is_musician = in_array( 'um_musician', (array) $user->roles );
     $is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
 
     if ( ! $is_musician && ! $is_eventer ) return $data;
 
-    // Разрешённые типы записей для каждой роли
     $allowed_types = array();
     if ( $is_musician ) $allowed_types[] = 'rediez_musicians';
     if ( $is_eventer )  $allowed_types[] = 'rediez_events';
 
     if ( ! in_array( $data['post_type'], $allowed_types ) ) return $data;
 
-    // Если пытаются опубликовать — ставим pending
-    if ( $data['post_status'] === 'publish' ) {
+    if ( in_array( $data['post_status'], array( 'publish', 'draft' ) ) ) {
         $data['post_status'] = 'pending';
     }
 
@@ -213,10 +187,11 @@ function rediez_force_pending_status( $data, $postarr ) {
 add_filter( 'wp_insert_post_data', 'rediez_force_pending_status', 10, 2 );
 
 
-// 6. УВЕДОМЛЕНИЕ АДМИНУ О НОВОЙ ЗАПИСИ
+// ========================================
+// 5. УВЕДОМЛЕНИЕ АДМИНУ О НОВОЙ ЗАПИСИ
+// ========================================
 function rediez_notify_admin_on_pending( $new_status, $old_status, $post ) {
 
-    // Только при переходе в статус pending
     if ( $new_status !== 'pending' || $old_status === 'pending' ) return;
 
     $allowed_types = array( 'rediez_musicians', 'rediez_events' );
@@ -224,11 +199,9 @@ function rediez_notify_admin_on_pending( $new_status, $old_status, $post ) {
 
     $admin_email = get_option( 'admin_email' );
     $author      = get_userdata( $post->post_author );
-
-    $type_label = $post->post_type === 'rediez_musicians' ? 'музыканта' : 'мероприятия';
+    $type_label  = $post->post_type === 'rediez_musicians' ? 'музыканта' : 'мероприятия';
 
     $subject = sprintf( '[%s] Новая запись %s ожидает модерации', get_bloginfo( 'name' ), $type_label );
-
     $message = sprintf(
         "Новая запись \"%s\" от пользователя %s (%s) ожидает модерации.\n\nПросмотреть и опубликовать: %s",
         $post->post_title,
@@ -241,13 +214,15 @@ function rediez_notify_admin_on_pending( $new_status, $old_status, $post ) {
 }
 add_action( 'transition_post_status', 'rediez_notify_admin_on_pending', 10, 3 );
 
-// 7. СКРЫВАЕМ ЗАПИСИ ДРУГИХ ПОЛЬЗОВАТЕЛЕЙ
+
+// ========================================
+// 6. СКРЫВАЕМ ЗАПИСИ ДРУГИХ ПОЛЬЗОВАТЕЛЕЙ
+// ========================================
 function rediez_filter_posts_by_author( $query ) {
 
     if ( ! is_admin() || ! $query->is_main_query() ) return;
 
-    $user = wp_get_current_user();
-
+    $user        = wp_get_current_user();
     $is_musician = in_array( 'um_musician', (array) $user->roles );
     $is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
 
@@ -261,3 +236,35 @@ function rediez_filter_posts_by_author( $query ) {
     }
 }
 add_action( 'pre_get_posts', 'rediez_filter_posts_by_author' );
+
+
+// ========================================
+// 7. МЕДИАБИБЛИОТЕКА — ТОЛЬКО СВОИ ФАЙЛЫ
+// ========================================
+function rediez_filter_media_by_author( $query ) {
+
+    $user        = wp_get_current_user();
+    $is_musician = in_array( 'um_musician', (array) $user->roles );
+    $is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
+
+    if ( ! $is_musician && ! $is_eventer ) return $query;
+
+    $query['author'] = get_current_user_id();
+    return $query;
+}
+add_filter( 'ajax_query_attachments_args', 'rediez_filter_media_by_author' );
+
+
+// ========================================
+// 8. РАЗРЕШАЕМ ДОСТУП В WP-ADMIN (Ultimate Member)
+// ========================================
+add_filter( 'um_access_protected_wpadmin', function( $protected ) {
+    $user          = wp_get_current_user();
+    $allowed_roles = array( 'um_musician', 'um_eventer' );
+    foreach ( $allowed_roles as $role ) {
+        if ( in_array( $role, (array) $user->roles ) ) {
+            return false;
+        }
+    }
+    return $protected;
+} );
