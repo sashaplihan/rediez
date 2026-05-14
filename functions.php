@@ -197,18 +197,27 @@ function rediez_scripts() {
     wp_enqueue_script( 'rediez-price-range', get_template_directory_uri() . '/js/price-range.js', array(), '', true );
 
     wp_enqueue_script( 'rediez-musicians-filters', get_template_directory_uri() . '/js/musicians-filters.js', array('rediez-price-range'), '', true );
-
 	wp_localize_script('rediez-musicians-filters', 'rediez_filters', [
     'ajax_url' => admin_url('admin-ajax.php'),
     'nonce'    => wp_create_nonce('musicians_filter_nonce'),
 	]);
 
 	wp_enqueue_script( 'rediez-events-filters',get_template_directory_uri() . '/js/events-filters.js', array('rediez-price-range'), '', true );
-
 	wp_localize_script( 'rediez-events-filters', 'rediez_events_filters', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'events_filter_nonce' ),
 	) );
+
+	wp_enqueue_script( 'rediez-ultimate-member', get_template_directory_uri() . '/js/ultimate-member.js', array('rediez-micromodal'), '', true );
+
+	$musician_meta = get_option('um_role_musician_meta');
+	$eventer_meta  = get_option('um_role_eventer_meta');
+
+	wp_localize_script('rediez-ultimate-member', 'umRedirectUrls', [
+		'musician_register'    => !empty($musician_meta['_um_checkmail_url']) ? $musician_meta['_um_checkmail_url'] : '',
+		'eventer_register'     => !empty($eventer_meta['_um_checkmail_url'])  ? $eventer_meta['_um_checkmail_url']  : '',
+		'ajax_url'             => admin_url('admin-ajax.php'),
+	]);
 
     wp_enqueue_script( 'rediez-common', get_template_directory_uri() . '/js/common.js', array('jquery', 'rediez-micromodal'), '', true );
 }
@@ -294,3 +303,21 @@ add_action( 'wp_footer', 'rediez_um_profile_url' );
 
 // Подключение кастомных настроек админ-бара
 require_once get_template_directory() . '/inc/admin-bar-bottom.php';
+
+// Подключение фильтров для изменений в админке
+require_once get_template_directory() . '/inc/admin-customization.php';
+
+// Подключение админских скриптов и модалок
+if ( is_admin() ) {
+    require_once get_template_directory() . '/inc/admin-modals.php';
+}
+
+
+// Добавляем email в URL страницы успеха после регистрации
+//add_filter( 'um_registration_complete_redirect_url', function( $url, $user_id ) {
+//    $user = get_userdata( $user_id );
+//    if ( $user ) {
+//        $url = add_query_arg( 'reg_email', urlencode( $user->user_email ), $url );
+//    }
+//    return $url;
+//}, 10, 2 );

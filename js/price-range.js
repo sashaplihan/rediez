@@ -1,6 +1,4 @@
 // ДВОЙНОЙ ПОЛЗУНОК ЦЕНЫ
-// ========================================
-
 document.addEventListener('DOMContentLoaded', function() {
   
   // Получаем элементы
@@ -14,9 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   const MIN = parseInt(priceInputMin.min) || 0;
-  const MAX = parseInt(priceInputMax.max) || 100000;
+  const MAX = parseInt(priceInputMax.max) || 10000;
   const STEP = 100; // Шаг изменения
-  const GAP = 500; // Минимальный разрыв между значениями
+  const GAP = 0; // Минимальный разрыв между значениями
 
   // Создаем элементы ползунка
   const progressBar = document.createElement('div');
@@ -63,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let minVal = parseInt(this.value);
     let maxVal = parseInt(rangeMax.value);
     
-    // Проверяем минимальный разрыв
-    if (maxVal - minVal < GAP) {
-      minVal = maxVal - GAP;
+    // Не даём пересечься
+    if (minVal >= maxVal) {
+      minVal = maxVal - STEP;
       this.value = minVal;
     }
     
@@ -79,9 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let maxVal = parseInt(this.value);
     let minVal = parseInt(rangeMin.value);
     
-    // Проверяем минимальный разрыв
-    if (maxVal - minVal < GAP) {
-      maxVal = minVal + GAP;
+    // Не даём пересечься
+    if (maxVal <= minVal) {
+      maxVal = minVal + STEP;
       this.value = maxVal;
     }
     
@@ -97,8 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Валидация
     if (minVal < MIN) minVal = MIN;
-    if (minVal > MAX - GAP) minVal = MAX - GAP;
-    if (maxVal - minVal < GAP) minVal = maxVal - GAP;
+    if (minVal >= maxVal) minVal = maxVal - STEP;
     
     this.value = minVal;
     rangeMin.value = minVal;
@@ -112,8 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Валидация
     if (maxVal > MAX) maxVal = MAX;
-    if (maxVal < MIN + GAP) maxVal = MIN + GAP;
-    if (maxVal - minVal < GAP) maxVal = minVal + GAP;
+    if (maxVal <= minVal) maxVal = minVal + STEP;
     
     this.value = maxVal;
     rangeMax.value = maxVal;

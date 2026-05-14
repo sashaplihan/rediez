@@ -10,14 +10,14 @@ $icon_path = get_template_directory_uri() . '/assets/images/icons/';
 $phone    = carbon_get_the_post_meta( 'crb_event_phone' );
 $email    = carbon_get_the_post_meta( 'crb_event_email' );
 $telegram = carbon_get_the_post_meta( 'crb_event_telegram' );
-$whatsapp = carbon_get_the_post_meta( 'crb_event_whatsapp' );
+$instagram = carbon_get_the_post_meta( 'crb_event_instagram' );
 $viber    = carbon_get_the_post_meta( 'crb_event_viber' );
 $tiktok   = carbon_get_the_post_meta( 'crb_event_tiktok' );
 $vk       = carbon_get_the_post_meta( 'crb_event_vk' );
 $ok       = carbon_get_the_post_meta( 'crb_event_ok' );
 
 // Если нет ни одного контакта — не выводим блок
-if ( ! $phone && ! $email && ! $telegram && ! $whatsapp && ! $viber && ! $tiktok && ! $vk && ! $ok ) {
+if ( ! $phone && ! $email && ! $telegram && ! $instagram && ! $viber && ! $tiktok && ! $vk && ! $ok ) {
     return;
 }
 ?>
@@ -45,7 +45,7 @@ if ( ! $phone && ! $email && ! $telegram && ! $whatsapp && ! $viber && ! $tiktok
     <?php
     $socials = array(
         'telegram' => array( 'url' => $telegram, 'icon' => 'telegram-plane.svg', 'label' => 'telegram' ),
-        'whatsapp' => array( 'url' => $whatsapp ? 'https://wa.me/' . preg_replace( '/[^+\d]/', '', $whatsapp ) : '', 'icon' => 'whatsapp.svg', 'label' => 'whatsapp' ),
+        'instagram' => array( 'url' => $instagram, 'icon' => 'instagram.svg', 'label' => 'instagram' ),
         'viber'    => array( 'url' => $viber    ? 'viber://chat?number=' . preg_replace( '/[^+\d]/', '', $viber ) : '', 'icon' => 'viber.svg', 'label' => 'viber' ),
         'tiktok'   => array( 'url' => $tiktok,  'icon' => 'tiktok.svg',           'label' => 'tiktok' ),
         'vk'       => array( 'url' => $vk,      'icon' => 'vk-icon.svg',          'label' => 'vkontakte' ),

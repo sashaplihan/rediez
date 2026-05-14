@@ -25,6 +25,8 @@ function rediez_ajax_filter_events() {
     $genres     = isset( $_POST['genre'] )      ? array_map( 'sanitize_text_field', (array) $_POST['genre'] )      : array();
     $locations  = isset( $_POST['location'] )   ? array_map( 'sanitize_text_field', (array) $_POST['location'] )   : array();
     $durations  = isset( $_POST['duration'] )   ? array_map( 'sanitize_text_field', (array) $_POST['duration'] )   : array();
+    $performers = isset( $_POST['performer'] )  ? array_map( 'sanitize_text_field', (array) $_POST['performer'] )  : array();
+    $lineups    = isset( $_POST['lineup'] )     ? array_map( 'sanitize_text_field', (array) $_POST['lineup'] )     : array();
     $conditions = isset( $_POST['conditions'] ) ? array_map( 'sanitize_text_field', (array) $_POST['conditions'] ) : array();
 
     // === Собираем set-фильтры ===
@@ -32,6 +34,8 @@ function rediez_ajax_filter_events() {
         '_crb_event_types'              => $events,
         '_crb_event_performance_format' => $formats,
         '_crb_event_genre'              => $genres,
+        '_crb_event_performer_type'     => $performers,
+        '_crb_event_lineup'             => $lineups,
         '_crb_event_location'           => $locations,
         '_crb_event_duration'           => $durations,
         '_crb_event_conditions'         => $conditions,

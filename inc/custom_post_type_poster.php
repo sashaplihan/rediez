@@ -34,7 +34,7 @@ function custom_post_type_poster() {
     $args = array(
         'label'               => 'Афиша',
         'labels'              => $labels,
-        'supports'            => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+        'supports'            => array( 'title', 'editor', 'thumbnail' ),
         'hierarchical'        => false,
         'public'              => true,
         'show_ui'             => true,

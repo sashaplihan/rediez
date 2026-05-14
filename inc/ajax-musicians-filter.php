@@ -18,13 +18,12 @@ function rediez_ajax_filter_musicians() {
 
     // === Получаем параметры ===
     $price_min  = isset( $_POST['price_min'] ) ? intval( $_POST['price_min'] ) : 0;
-    $price_max  = isset( $_POST['price_max'] ) ? intval( $_POST['price_max'] ) : 50000;
+    $price_max  = isset( $_POST['price_max'] ) ? intval( $_POST['price_max'] ) : 10000;
     $sort       = isset( $_POST['sort'] )       ? sanitize_text_field( $_POST['sort'] ) : '';
     $search     = isset( $_POST['search'] )     ? sanitize_text_field( $_POST['search'] ) : '';
     $paged      = isset( $_POST['paged'] )      ? intval( $_POST['paged'] ) : 1;
     $travel     = isset( $_POST['travel'] )     ? sanitize_text_field( $_POST['travel'] ) : '';
 
-    $events     = isset( $_POST['event'] )      ? array_map( 'sanitize_text_field', (array) $_POST['event'] )     : array();
     $formats    = isset( $_POST['format'] )     ? array_map( 'sanitize_text_field', (array) $_POST['format'] )    : array();
     $genres     = isset( $_POST['genre'] )      ? array_map( 'sanitize_text_field', (array) $_POST['genre'] )     : array();
     $performers = isset( $_POST['performer'] )  ? array_map( 'sanitize_text_field', (array) $_POST['performer'] ) : array();
@@ -33,7 +32,6 @@ function rediez_ajax_filter_musicians() {
 
     // === Собираем set-фильтры ===
     $set_filters = array(
-        '_crb_musician_event_types'        => $events,
         '_crb_musician_performance_format' => $formats,
         '_crb_musician_genre'              => $genres,
         '_crb_musician_performer_type'     => $performers,
@@ -48,7 +46,7 @@ function rediez_ajax_filter_musicians() {
     $meta_query = array( 'relation' => 'AND' );
 
     // Цена
-    $price_is_default = ( $price_min === 0 && $price_max === 50000 );
+    $price_is_default = ( $price_min === 0 && $price_max === 10000 );
     if ( ! $price_is_default ) {
         $meta_query[] = array(
             'key'     => '_crb_musician_price',

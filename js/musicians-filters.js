@@ -1,5 +1,4 @@
 // AJAX ФИЛЬТРЫ МУЗЫКАНТОВ
-
 document.addEventListener('DOMContentLoaded', function () {
 
     const filtersForm  = document.querySelector('.musician-catalog__filters');
@@ -11,9 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let filterTimeout = null;
 
-    // ----------------------------------------
     // Собираем все параметры фильтров
-    // ----------------------------------------
     function collectParams(paged) {
         const params = new FormData();
 
@@ -22,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         params.append('paged',  paged || 1);
 
         // Чекбоксы
-        ['event', 'format', 'genre', 'performer', 'lineup', 'location'].forEach(function (group) {
+        ['format', 'genre', 'performer', 'lineup', 'location'].forEach(function (group) {
             filtersForm.querySelectorAll('input[name="' + group + '[]"]:checked').forEach(function (cb) {
                 params.append(group + '[]', cb.value);
             });
@@ -49,9 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return params;
     }
 
-    // ----------------------------------------
     // AJAX-запрос
-    // ----------------------------------------
     function doFilter(paged) {
         resultsGrid.classList.add('is-loading');
 
@@ -65,6 +60,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
             resultsGrid.innerHTML = data.data.html;
             renderPagination(data.data.max_pages, parseInt(data.data.paged));
+
+            const total = parseInt(data.data.found_posts) || 0;
+
+            // Обновляем счётчик найденных музыкантов
+            const countEl = document.querySelector('.musician-catalog__count');
+            if (countEl) {
+                if (total === 0) {
+                    countEl.style.display = 'none';
+                } else {
+                    countEl.style.display = '';
+                    let label;
+                    const mod10  = total % 10;
+                    const mod100 = total % 100;
+                    if (mod10 === 1 && mod100 !== 11) {
+                        label = 'Найден <strong>' + total + '</strong> музыкант';
+                    } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+                        label = 'Найдено <strong>' + total + '</strong> музыканта';
+                    } else {
+                        label = 'Найдено <strong>' + total + '</strong> музыкантов';
+                    }
+                    countEl.innerHTML = label;
+                }
+            }
+
+            // Обновляем кнопку «Показать (N)»
+            const showBtn = filtersForm.querySelector('.filters__show');
+            if (showBtn) {
+                showBtn.textContent = total ? 'Показать (' + total + ')' : 'Показать';
+            }
         })
         .catch(function (err) {
             console.error('Filter error:', err);
@@ -159,9 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return pages;
     }
 
-    // ----------------------------------------
     // Слушатели событий
-    // ----------------------------------------
 
     // Чекбоксы фильтров
     filtersForm.addEventListener('change', function (e) {
@@ -205,12 +227,21 @@ document.addEventListener('DOMContentLoaded', function () {
             // Сбрасываем цену — диспатчим событие, чтобы price-range.js обновил ползунок
             const priceMin = filtersForm.querySelector('input[name="price_min"]');
             const priceMax = filtersForm.querySelector('input[name="price_max"]');
-            if (priceMin) { priceMin.value = priceMin.min || 0;         priceMin.dispatchEvent(new Event('input', { bubbles: true })); }
-            if (priceMax) { priceMax.value = priceMax.max || 50000;    priceMax.dispatchEvent(new Event('input', { bubbles: true })); }
+            if (priceMin) { priceMin.value = priceMin.min || 0; priceMin.dispatchEvent(new Event('input', { bubbles: true })); }
+            if (priceMax) { priceMax.value = priceMax.max || 10000; priceMax.dispatchEvent(new Event('input', { bubbles: true })); }
 
             doFilter(1);
         });
     }
-	
-	doFilter(1);
+
+    // Кнопка «Показать (N)» — закрывает панель фильтров на мобилках
+    const showBtn = filtersForm.querySelector('.filters__show');
+    if (showBtn) {
+        showBtn.addEventListener('click', function () {
+            filtersForm.classList.remove('_active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    doFilter(1);
 });

@@ -210,7 +210,11 @@ Container::make( 'post_meta', 'Настройки афишы' )
 
 Container::make( 'post_meta', __( 'Информация о музыканте' ) )
     ->where( 'post_type', '=', 'rediez_musicians' )
-    ->add_tab( __('Основное'), array(
+    ->add_fields( array(
+        Field::make( 'textarea', 'crb_musician_description', 'Краткое описание исполнителя' )
+            ->set_rows( 8 )
+            ->set_attribute( 'placeholder', 'Краткое описание исполнителя или группы...' ),
+
         Field::make( 'text', 'crb_musician_price', 'Цена за час (BYN)' )
             ->set_attribute( 'type', 'number' )
             ->set_attribute( 'placeholder', '700' )
@@ -218,83 +222,81 @@ Container::make( 'post_meta', __( 'Информация о музыканте' )
             ->set_help_text( 'Укажите стоимость выступления в белорусских рублях за час' ),
         
         Field::make( 'separator', 'crb_musician_tags_sep', 'Теги и категории' ),
-        Field::make( 'set', 'crb_musician_event_types', 'Тип события' )
+        Field::make( 'set', 'crb_musician_performer_type', 'Тип исполнителя' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'wedding' => 'Свадьба',
-                'corporate' => 'Корпоратив',
-                'anniversary' => 'Юбилей',
-                'kids' => 'Детский праздник',
-                'restaurant' => 'Ресторан',
-                'club' => 'Клуб',
-                'festival' => 'Фестиваль',
-                'Official' => 'Официальные мероприятия',
-                'studio' => 'Студийная запись',
+                'band'            => 'Группа',
+                'solo'            => 'Сольный артист',
+                'session'         => 'Сессионный музыкант',
+                'vocalist'        => 'Вокалист',
+                'instrumentalist' => 'Инструменталист',
+                'duo'             => 'Дуэт',
+                'trio'            => 'Трио',
+                'quartet'         => 'Квартет',
+                'dj'              => 'DJ',
+                'event_dj'        => 'Event-DJ',
+                'other'           => 'Другое',
             ) )
-            ->set_help_text( 'Выберите типы событий, на которых выступает музыкант' ),
+            ->set_help_text( 'Укажите тип исполнителя' ),
 
-        Field::make( 'set', 'crb_musician_performance_format', 'Формат выступления' )
+        Field::make( 'set', 'crb_musician_performance_format', 'Формат исполнения' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'covers' => 'Каверы',
-                'original' => 'Авторские песни',
-                'instrumental' => 'Инструментал',
-                'dj_set' => 'DJ-сет',
-                'background' => 'Фон (background)',
-                'live' => 'Живой звук',
+                'original' => 'Авторский репертуар',
+                'covers'   => 'Кавер',
             ) )
             ->set_help_text( 'Укажите форматы, в которых работает музыкант' ),
 
         Field::make( 'set', 'crb_musician_genre', 'Жанр' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'pop' => 'Поп',
-                'rock' => 'Рок',
-                'jazz' => 'Джаз',
-                'rap' => 'Рэп',
-                'electronic' => 'Электронная',
-                'classical' => 'Классика',
-                'folk' => 'Народная',
-                'lounge' => 'Лаунж',
-                'retro' => 'Ретро, диско',
-                'author' => 'Авторская песня',
+                'pop'        => 'Поп (популярная, данс-, евро-поп…)',
+                'rock'       => 'Рок (рок-н-ролл, хард-рок, альтернатива, панк, метал…)',
+                'blues'      => 'Блюз (кантри-, дельта-, чикагский блюз…)',
+                'jazz'       => 'Джаз (свинг, лаунж…)',
+                'rnb'        => 'R&B (ритм-энд-блюз, соул, фанк…)',
+                'country'    => 'Кантри (вестерн, блюграсс…)',
+                'reggae'     => 'Регги (ска, рокстеди, даб)',
+                'hiphop'     => 'Хип-хоп (рэп, трэп, old school)',
+                'electronic' => 'Электронная музыка (хаус, техно, транс, drum and bass, чилаут…)',
+                'classical'  => 'Классическая музыка (симфония, опера, соната…)',
+                'folk'       => 'Фолк (народная музыка, акустический фолк…)',
+                'latin'      => 'Латиноамериканская (сальса, самба, бачата, танго)',
+                'chanson'    => 'Шансон / авторская песня (французский шансон, русский шансон, бардовская песня)',
+                'other'      => 'Другое',
             ) )
             ->set_help_text( 'Выберите музыкальные жанры' ),
-        
-        Field::make( 'set', 'crb_musician_performer_type', 'Тип исполнителя' )
-            ->set_options( array(
-                'band' => 'Группа',
-                'solo' => 'Сольный артист',
-                'duo' => 'Дуэт',
-                'dj' => 'DJ',
-                'instrumentalist' => 'Инструменталист',
-                'session' => 'Сессионный музыкант',
-            ) )
-            ->set_help_text( 'Укажите тип исполнителя' ),
 
         Field::make( 'set', 'crb_musician_lineup', 'Состав' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'vocal' => 'Вокал',
-                'brass' => 'Духовые',
-                'strings' => 'Струнные',
-                'drums' => 'Ударные',
-                'electronic' => 'Электронные',
+                'keys'       => 'Клавишные (рояль, пианино, синтезатор, орган, аккордеон)',
+                'strings'    => 'Струнные (гитара, бас-гитара, скрипка, виолончель, арфа)',
+                'brass'      => 'Духовые (флейта, саксофон, труба, кларнет, гобой, тромбон)',
+                'drums'      => 'Ударные (установка, перкуссия, малый барабан, ханг)',
+                'folk'       => 'Народные (баян, балалайка, домра, цимбалы)',
+                'electronic' => 'Электроника (семплер, драм-машина, midi-клавиши)',
+                'vocal'      => 'Вокал (солист, бэк-вокалист)',
             ) )
             ->set_help_text( 'Выберите инструменты в составе' ),
 
-        Field::make( 'set', 'crb_musician_location', 'Локация' )
+        Field::make( 'set', 'crb_musician_location', 'Где выступаем' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'minsk' => 'Минск',
-                'brest' => 'Брест',
-                'vitebsk' => 'Витебск',
-                'gomel' => 'Гомель',
-                'grodno' => 'Гродно',
-                'mogilev' => 'Могилёв',
+                'minsk'   => 'Минск и Минская область',
+                'brest'   => 'Брест и Брестская область',
+                'vitebsk' => 'Витебск и Витебская область',
+                'gomel'   => 'Гомель и Гомельская область',
+                'grodno'  => 'Гродно и Гродненская область',
+                'mogilev' => 'Могилёв и Могилёвская область',
             ) )
             ->set_help_text( 'Выберите города, в которых работает музыкант' ),
+        
         Field::make( 'checkbox', 'crb_musician_travel', 'Готов к выездам' )
             ->set_option_value( 'yes' )
-            ->set_help_text( 'Отметьте, если музыкант готов выезжать в другие города' ), 
-    ))
-    
-    ->add_tab( __('Контакты'), array(
+            ->set_help_text( 'Отметьте, если музыкант готов выезжать в другие города' ),
+
+        Field::make( 'separator', 'crb_sep_contacts_title', 'Контакты' ),
         Field::make( 'text', 'crb_musician_phone', 'Телефон' )
             ->set_attribute( 'placeholder', '+375 (29) 777-11-22' )
             ->set_width( 50 ),
@@ -306,42 +308,49 @@ Container::make( 'post_meta', __( 'Информация о музыканте' )
         Field::make( 'separator', 'crb_musician_social_sep', 'Социальные сети и мессенджеры' ),
         Field::make( 'text', 'crb_musician_telegram', 'Telegram' )
             ->set_attribute( 'placeholder', 'https://t.me/username' )
-            ->set_help_text( 'Полная ссылка на Telegram или username' )
-            ->set_width( 50 ),
-        Field::make( 'text', 'crb_musician_whatsapp', 'WhatsApp' )
-            ->set_attribute( 'placeholder', '+375291234567' )
-            ->set_help_text( 'Номер телефона для WhatsApp' )
-            ->set_width( 50 ),
+            ->set_width( 33 ),
+        Field::make( 'text', 'crb_musician_instagram', 'Instagram' )
+            ->set_attribute( 'placeholder', 'https://instagram.com/username' )
+            ->set_width( 33 ),
         Field::make( 'text', 'crb_musician_viber', 'Viber' )
             ->set_attribute( 'placeholder', '+375291234567' )
-            ->set_help_text( 'Номер телефона для Viber' )
-            ->set_width( 50 ),
+            ->set_width( 33 ),
         Field::make( 'text', 'crb_musician_tiktok', 'TikTok' )
             ->set_attribute( 'placeholder', 'https://tiktok.com/@username' )
-            ->set_help_text( 'Ссылка на профиль TikTok' )
-            ->set_width( 50 ),
+            ->set_width( 33 ),
         Field::make( 'text', 'crb_musician_vk', 'ВКонтакте' )
             ->set_attribute( 'placeholder', 'https://vk.com/username' )
-            ->set_help_text( 'Ссылка на профиль ВКонтакте' )
-            ->set_width( 50 ),
+            ->set_width( 33 ),
         Field::make( 'text', 'crb_musician_ok', 'Одноклассники' )
             ->set_attribute( 'placeholder', 'https://ok.ru/username' )
-            ->set_help_text( 'Ссылка на профиль в Одноклассниках' )
-            ->set_width( 50 ),
-    ))
-    
-    ->add_tab( __('Медиа'), array(
+            ->set_width( 33 ),
+
+		Field::make( 'radio', 'crb_media_type', 'Добавить медиа' )
+			->set_classes( 'rediez-media-switcher' )
+			->set_options( array(
+				'gallery' => 'Фото',
+				'video'   => 'Видео',
+			) )
+			->set_default_value( 'gallery' ),
+
 		Field::make( 'complex', 'crb_musician_gallery', 'Галерея фотографий' )
+			->set_classes( 'rediez-tab-content rediez-gallery' )
 			->set_layout( 'tabbed-horizontal' )
 			->add_fields( array(
 				Field::make( 'image', 'crb_gallery_image', 'Изображение' )
 					->set_value_type( 'id' ),
 			) )
 			->set_header_template( 'Фото #<%- $_index + 1 %>' )
-			->set_help_text( 'Нажмите "Добавить" для каждого нового фото. Порядок можно изменить перетаскиванием.' ),
-        
-        Field::make( 'separator', 'crb_musician_video_sep', 'Видео' ),
+			->set_help_text( 'Нажмите "Добавить" для каждого нового фото. Порядок можно изменить перетаскиванием.' )
+			->set_conditional_logic( array(
+				array(
+					'field' => 'crb_media_type',
+					'value' => 'gallery',
+				),
+			) ),
+
 		Field::make( 'complex', 'crb_musician_videos', 'Видео YouTube' )
+			->set_classes( 'rediez-tab-content rediez-video' )
 			->set_layout( 'tabbed-horizontal' )
 			->add_fields( array(
 				Field::make( 'text', 'crb_video_url', 'Ссылка на YouTube' )
@@ -349,152 +358,192 @@ Container::make( 'post_meta', __( 'Информация о музыканте' )
 					->set_help_text( 'Вставьте любую ссылку на YouTube (watch, share, embed - все форматы поддерживаются)' ),
 			) )
 			->set_header_template( 'Видео #<%- $_index + 1 %>' )
-			->set_help_text( 'Добавьте ссылки на видео. Поддерживаются форматы: youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...' ),
-				
-));
+			->set_help_text( 'Добавьте ссылки на видео. Поддерживаются форматы: youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...' )
+			->set_conditional_logic( array(
+				array(
+					'field' => 'crb_media_type',
+					'value' => 'video',
+				),
+			) ),
+    ) );
 
 
 Container::make( 'post_meta', __( 'Информация о мероприятии' ) )
     ->where( 'post_type', '=', 'rediez_events' )
-
-    ->add_tab( __('Основное'), array(
+ 
+    ->add_fields( array(
+ 
+        Field::make( 'textarea', 'crb_event_description', 'Описание мероприятия' )
+            ->set_rows( 8 )
+            ->set_attribute( 'placeholder', 'Введите описание мероприятия...' ),
+			
         Field::make( 'text', 'crb_event_price', 'Бюджет (BYN)' )
             ->set_attribute( 'type', 'number' )
             ->set_attribute( 'placeholder', '1000' )
             ->set_attribute( 'min', '0' )
+    		->set_attribute( 'max', '10000' )
+			->set_attribute('step', '1')
             ->set_help_text( 'Укажите бюджет мероприятия в белорусских рублях' ),
-
-		Field::make( 'date_time', 'crb_event_date', 'Дата и время события' )
-			->set_storage_format( 'Y-m-d H:i:s' )
-			->set_picker_options( array(
-				'time_24hr' => true,
-			) )
-			->set_help_text( 'Когда состоится мероприятие' )
+ 
+        Field::make( 'date_time', 'crb_event_date', 'Дата и время события' )
+            ->set_storage_format( 'Y-m-d H:i:s' )
+            ->set_picker_options( array( 'time_24hr' => true ) )
+            ->set_help_text( 'Когда состоится мероприятие' )
             ->set_width( 50 ),
-
-		Field::make( 'date_time', 'crb_event_accept_until', 'Приём откликов до' )
-			->set_storage_format( 'Y-m-d H:i:s' )
-			->set_picker_options( array(
-				'time_24hr' => true,
-			) )
-			->set_help_text( 'Крайний срок подачи заявок от исполнителей' )
+ 
+        Field::make( 'date_time', 'crb_event_accept_until', 'Приём откликов до' )
+            ->set_storage_format( 'Y-m-d H:i:s' )
+            ->set_picker_options( array( 'time_24hr' => true ) )
+            ->set_help_text( 'Крайний срок подачи заявок от исполнителей' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_venue', 'Место проведения' )
             ->set_attribute( 'placeholder', 'г. Минск, ресторан "Ренессанс"' )
             ->set_help_text( 'Город и название площадки' ),
-
+ 
         Field::make( 'separator', 'crb_event_tags_sep', 'Теги и категории' ),
-
-        Field::make( 'set', 'crb_event_types', 'Тип события' )
+ 
+        Field::make( 'set', 'crb_event_types', 'Формат события' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'wedding'   => 'Свадьба',
-                'corporate' => 'Корпоратив',
-                'anniversary' => 'Юбилей',
-                'kids'      => 'Детский праздник',
-                'restaurant' => 'Ресторан',
-                'club'      => 'Клуб',
-                'festival'  => 'Фестиваль',
-                'official'  => 'Официальные мероприятия',
-                'studio'    => 'Студийная запись',
-            ) )
-            ->set_help_text( 'Выберите тип мероприятия' ),
-
-        Field::make( 'set', 'crb_event_performance_format', 'Формат выступления' )
-            ->set_options( array(
-                'covers'       => 'Каверы',
-                'original'     => 'Авторские песни',
-                'instrumental' => 'Инструментал',
+                'corporate'    => 'Корпоративное мероприятие',
+                'wedding'      => 'Свадьба, банкет, юбилей',
+                'kids'         => 'Детский праздник',
+                'registration' => 'Выездная регистрация/поздравление',
+                'concert'      => 'Концерт/трибьют',
+                'music'        => 'Музыкальное сопровождение',
                 'dj_set'       => 'DJ-сет',
-                'background'   => 'Фон (background)',
-                'live'         => 'Живой звук',
-                'recording'    => 'Запись в студии',
+                'other'        => 'Другое',
             ) )
-            ->set_help_text( 'Укажите желаемый формат выступления' ),
-
-        Field::make( 'set', 'crb_event_genre', 'Жанр' )
+            ->set_help_text( 'Выберите формат мероприятия' ),
+ 
+        Field::make( 'set', 'crb_event_performer_type', 'Тип исполнителя' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'pop'        => 'Поп',
-                'rock'       => 'Рок',
-                'jazz'       => 'Джаз',
-                'rap'        => 'Рэп',
-                'electronic' => 'Электронная',
-                'classical'  => 'Классика',
-                'folk'       => 'Народная',
-                'lounge'     => 'Лаунж',
-                'retro'      => 'Ретро',
+                'band'            => 'Группа',
+                'solo'            => 'Сольный артист',
+                'session'         => 'Сессионный музыкант',
+                'vocalist'        => 'Вокалист',
+                'instrumentalist' => 'Инструменталист',
+                'duo'             => 'Дуэт',
+                'trio'            => 'Трио',
+                'quartet'         => 'Квартет',
+                'dj'              => 'DJ',
+                'event_dj'        => 'Event-DJ',
+                'other'           => 'Другое',
+            ) )
+            ->set_help_text( 'Укажите тип исполнителя' ),
+ 
+        Field::make( 'set', 'crb_event_performance_format', 'Формат исполнения' )
+			->set_classes( 'collapsible-field' )
+            ->set_options( array(
+                'original' => 'Авторский репертуар',
+                'covers'   => 'Кавер',
+            ) )
+            ->set_help_text( 'Укажите формат исполнения' ),
+ 
+        Field::make( 'set', 'crb_event_genre', 'Жанр' )
+			->set_classes( 'collapsible-field' )
+            ->set_options( array(
+                'pop'        => 'Поп (популярная музыка, данс-поп, синти-поп, евро-поп)',
+                'rock'       => 'Рок (рок-н-ролл, хард-рок, панк-рок, альтернативный рок, метал)',
+                'blues'      => 'Блюз (кантри-блюз, дельта-блюз, чикагский блюз)',
+                'jazz'       => 'Джаз (свинг, бибоп, лаунж, фьюжн, регтайм)',
+                'rnb'        => 'R&B (ритм-энд-блюз, соул, фанк, contemporary R&B)',
+                'country'    => 'Кантри (вестерн, блюграсс, аутло-кантри)',
+                'reggae'     => 'Регги (ска, рокстеди, даб)',
+                'hiphop'     => 'Хип-хоп (рэп, трэп, осознанный хип-хоп, old school)',
+                'electronic' => 'Электронная музыка (хаус, техно, дабстеп, транс, drum and bass, эмбиент, чилаут, нью-эйдж)',
+                'classical'  => 'Классическая музыка (симфония, опера, камерная, соната)',
+                'folk'       => 'Фолк (народная музыка, акустический фолк, инди-фолк)',
+                'latin'      => 'Латиноамериканская (сальса, самба, реггетон, бачата, танго)',
+                'chanson'    => 'Шансон / авторская песня (французский шансон, русский шансон, бардовская песня)',
+                'other'      => 'Другое',
             ) )
             ->set_help_text( 'Выберите музыкальные жанры' ),
-
-        Field::make( 'set', 'crb_event_location', 'Локация' )
+ 
+        Field::make( 'set', 'crb_event_lineup', 'Состав' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'minsk'   => 'Минск',
-                'brest'   => 'Брест',
-                'vitebsk' => 'Витебск',
-                'gomel'   => 'Гомель',
-                'grodno'  => 'Гродно',
-                'mogilev' => 'Могилёв',
+                'keys'       => 'Клавишные (рояль, пианино, синтезатор, орган, аккордеон)',
+                'strings'    => 'Струнные (гитара, бас-гитара, скрипка, виолончель, арфа)',
+                'brass'      => 'Духовые (флейта, саксофон, труба, кларнет)',
+                'drums'      => 'Ударные (установка, перкуссия, малый барабан, ханг)',
+                'folk'       => 'Народные (баян, балалайка, домра, цимбалы)',
+                'electronic' => 'Электроника (семплер, драм-машина, midi-клавиши)',
+                'vocal'      => 'Вокал (солист, бэк-вокалист)',
             ) )
-            ->set_help_text( 'Выберите город проведения' ),
-
-        Field::make( 'set', 'crb_event_duration', 'Продолжительность выступления' )
+            ->set_help_text( 'Выберите инструменты в составе' ),
+ 
+        Field::make( 'set', 'crb_event_duration', 'Длительность' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
                 'half-hour'  => 'До 30 минут',
-                'hour'       => '1 час',
-                'two-hours'  => '2 часа',
-                'many-hours' => 'Более 2 часов',
+                '30-60'      => 'От 30 до 60 минут',
+                '60-120'     => 'От 60 до 120 минут',
+                'many-hours' => 'Более 120 минут',
             ) )
-            ->set_help_text( 'Укажите желаемую продолжительность' ),
-
-        Field::make( 'set', 'crb_event_conditions', 'Условия' )
+            ->set_help_text( 'Укажите желаемую длительность' ),
+ 
+        Field::make( 'set', 'crb_event_conditions', 'Дополнительные условия' )
+			->set_classes( 'collapsible-field' )
             ->set_options( array(
-                'payment'     => 'Оплата по договорённости',
-                'equipment'   => 'Нужна своя аппаратура',
-                'organizer'   => 'Аппаратура организатора',
-                'cashless'    => 'Контракт / безналичный расчёт',
-                'interaction' => 'Нужен интерактив с публикой',
+                'organizer' => 'Аппаратура организатора/площадки',
+                'equipment' => 'Нужна своя аппаратура',
+                'touring'   => 'Наличие гастрольного удостоверения',
             ) )
-            ->set_help_text( 'Укажите условия для исполнителя' ),
-
-        Field::make( 'checkbox', 'crb_event_payment', 'Оплата дороги / готовы оплачивать выезд' )
+            ->set_help_text( 'Укажите дополнительные условия' ),
+ 
+        Field::make( 'set', 'crb_event_location', 'Где выступаем' )
+			->set_classes( 'collapsible-field' )
+            ->set_options( array(
+                'minsk'   => 'Минск и Минская область',
+                'brest'   => 'Брест и Брестская область',
+                'vitebsk' => 'Витебск и Витебская область',
+                'gomel'   => 'Гомель и Гомельская область',
+                'grodno'  => 'Гродно и Гродненская область',
+                'mogilev' => 'Могилёв и Могилёвская область',
+            ) )
+            ->set_help_text( 'Выберите город проведения' ),
+ 
+        Field::make( 'checkbox', 'crb_event_payment', 'Оплата трансфера заказчиком' )
             ->set_option_value( 'yes' )
-            ->set_help_text( 'Отметьте, если организатор готов оплатить дорогу исполнителю' ),
-    ) )
+            ->set_help_text( 'Отметьте, если заказчик готов оплатить трансфер исполнителю' ),
 
-    ->add_tab( __('Контакты'), array(
-
+ 
+        Field::make( 'separator', 'crb_event_contacts_title', 'Контакты' ),
         Field::make( 'text', 'crb_event_phone', 'Телефон' )
             ->set_attribute( 'placeholder', '+375 (29) 777-11-22' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_email', 'Email' )
             ->set_attribute( 'type', 'email' )
             ->set_attribute( 'placeholder', 'event@example.com' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'separator', 'crb_event_social_sep', 'Социальные сети и мессенджеры' ),
-
+ 
         Field::make( 'text', 'crb_event_telegram', 'Telegram' )
             ->set_attribute( 'placeholder', 'https://t.me/username' )
             ->set_width( 50 ),
-
-        Field::make( 'text', 'crb_event_whatsapp', 'WhatsApp' )
-            ->set_attribute( 'placeholder', '+375291234567' )
+ 
+        Field::make( 'text', 'crb_event_instagram', 'Instagram' )
+            ->set_attribute( 'placeholder', 'https://instagram.com/username' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_viber', 'Viber' )
             ->set_attribute( 'placeholder', '+375291234567' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_tiktok', 'TikTok' )
             ->set_attribute( 'placeholder', 'https://tiktok.com/@username' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_vk', 'ВКонтакте' )
             ->set_attribute( 'placeholder', 'https://vk.com/username' )
             ->set_width( 50 ),
-
+ 
         Field::make( 'text', 'crb_event_ok', 'Одноклассники' )
             ->set_attribute( 'placeholder', 'https://ok.ru/username' )
             ->set_width( 50 ),
-) );
+    ) );

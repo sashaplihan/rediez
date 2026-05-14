@@ -10,7 +10,7 @@
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 
 	<?php wp_head(); ?>
@@ -74,30 +74,40 @@
 							$user        = wp_get_current_user();
 							$is_musician = in_array( 'um_musician', (array) $user->roles );
 							$is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
-
 							if ( $is_musician ) {
-								$profile_url  = admin_url( 'edit.php?post_type=rediez_musicians' );
+								$musician_query = new WP_Query([
+									'post_type'      => 'rediez_musicians',
+									'author'         => $user->ID,
+									'posts_per_page' => 1,
+									'post_status'    => ['publish', 'pending', 'draft'],
+									'fields'         => 'ids',
+									'no_found_rows'  => true,
+								]);
+
+								if ( $musician_query->have_posts() ) {
+									$musician_post_id = $musician_query->posts[0];
+									$profile_url = get_edit_post_link( $musician_post_id, 'raw' );
+								} else {
+									$profile_url = admin_url( 'post-new.php?post_type=rediez_musicians' );
+								}
+
 								$account_text = 'Мой профиль';
+
 							} elseif ( $is_eventer ) {
 								$profile_url  = admin_url( 'edit.php?post_type=rediez_events' );
 								$account_text = 'Мои мероприятия';
 							} else {
-								// Админ
 								$profile_url  = admin_url();
 								$account_text = 'Админ панель';
 							}
 							?>
-
 							<a href="<?php echo esc_url( $profile_url ); ?>" class="auth-btn auth-btn--account">
 								<?php echo esc_html( $account_text ); ?>
 							</a>
-
 						<?php else : ?>
-
 							<button type="button" class="auth-btn auth-btn--login" data-micromodal-trigger="modal-auth">
 								<?php echo esc_html( carbon_get_theme_option( 'crb_auth_login_text' ) ?: 'Вход | Регистрация' ); ?>
 							</button>
-
 						<?php endif; ?>
 					</div>
 
@@ -108,8 +118,8 @@
 
 	<main>
 
-	<?php
-	if ( ! is_front_page() && ! is_home() ) {
+<?php
+	if ( ! is_front_page() && ! is_home() && ! is_page_template( 'page-content-only.php' ) ) {
 		rediez_breadcrumbs();
 	}
-	?>
+?>

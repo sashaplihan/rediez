@@ -15,9 +15,11 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
  */
  :root {
     --color-accent: #F3F901;
+    --color-accent-hover: #d0d500;
     --color-gray: #9E9C9C;
     --color-dark: #1F1C1D;
     --color-black: #232323;
+	--color-menu: #2d2d2d;
 	--icon-size: 42px;
     --section-margin: 60px 0;
     --block-margin: 0 0 40px 0;
@@ -91,6 +93,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 	font-family: 'InterRegular', sans-serif;
+	background-color: var(--color-dark);
 }
 nav,
 footer,
@@ -237,7 +240,7 @@ address {
 	font-weight: 600;
 	line-height: 1.5;
 	color: #ffffff;
-	margin: var(--block-margin);
+	margin: 0 0 24px 0;
 }
 .title_link {
 	position: relative;
@@ -247,6 +250,7 @@ address {
 	font-weight: 600;
 	color: var(--color-accent);
 	padding: 10px 15px 10px 15px;
+    transition: all 0.3s ease;
 }
 .title_link .link-title__icon {
     width: 14px;
@@ -270,6 +274,10 @@ address {
 	font-size: 0.9rem;
 	line-height: 1.3;
 	color: var(--color-accent);
+    transition: all 0.3s ease;
+}
+.link-title .link-title__name:hover {
+	color: var(--color-accent-hover);
 }
 .link-title .link-title__icon {
 	width: 14px;
@@ -302,7 +310,7 @@ address {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--color-dark);
+    background-color: var(--color-menu);
     z-index: 2;
 }
 .header__wrapper {
@@ -314,6 +322,7 @@ address {
 .header__logo {
 	width: 140px;
 	height: auto;
+	overflow: hidden;
 	z-index: 3;
 }
 .header__nav {
@@ -350,6 +359,7 @@ address {
 .auth-btn--login,
 .auth-btn--account {
   color: var(--color-accent);
+    transition: all 0.3s ease;
 }
 .auth-btn--login:hover,
 .auth-btn--account:hover {
@@ -605,15 +615,16 @@ address {
   z-index: 0;
 }
 .hero_link:hover {
-	color: #ffffff;
+	background-color: var(--color-accent-hover);
 }
 .hero_btn {
 	position: relative;
     padding: 0.5rem 1rem 0.5rem 0;
+    transition: all 0.3s ease;
 }
 .hero_btn:hover,
 .hero_btn:hover::before {
-	color: #ffffff;
+	color: var(--color-accent-hover);
 }
 /* анимация */
 @keyframes glowing {
@@ -640,6 +651,10 @@ address {
 }
 .musicians__title span {
   color: #fff;
+}
+.musician-catalog__count,
+.events-catalog__count {
+	color: #ffffff;
 }
 .musicians__slider {
   position: relative;
@@ -1037,7 +1052,7 @@ address {
 	background-color: var(--color-black);
 }
 .kama_breadcrumbs {
-	padding: 2rem 0;
+	padding: 12px 0 32px;
 	font-size: 14px;
 	line-height: 1.3;
 	color: var(--color-gray);
@@ -1149,8 +1164,7 @@ address {
 }
 /* Лейбл чекбокса */
 .filter__label {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   cursor: pointer;
   font-size: 16px;
   color: var(--color-gray);
@@ -1158,7 +1172,10 @@ address {
   position: relative;
   padding-left: 2rem;
   line-height: 1.4;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
+}
+.filter__label span {
+	font-size: 12px;
 }
 /* Кастомный бокс через ::before */
 .filter__label::before {
@@ -1317,7 +1334,7 @@ address {
   cursor: pointer;
   pointer-events: auto;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 .price-range__slider input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
@@ -1325,25 +1342,27 @@ address {
 .price-range__slider input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.15);
 }
-.filters__reset {
+.filters__actions {
 	margin-top: 2rem;
-	position: relative;
+}
+.filters__reset {
 	display: inline-block;
-	padding: 13px 30px;
+	padding: 13px 20px;
 	font-size: 12px;
 	font-weight: 600;
-	color: rgb(0, 0, 0);
-	letter-spacing: 1.5px;
+	color: #ffffff;
+	letter-spacing: 1.2px;
 	text-transform: uppercase;
-	background-color: var(--color-accent);
+	border: 1px solid var(--color-accent);
 	border-radius: 25px;
-	transition: 0.3s;
+    transition: all 0.3s ease;
 	cursor: pointer;
 }
 .filters__reset:hover {
-  background: #F3F901;
-  border-color: #F3F901;
-  color: #ffffff;
+  	border: 1px solid var(--color-accent-hover);
+}
+.filters__show {
+	display: none;
 }
 
 /* Musician grid */
@@ -1552,6 +1571,10 @@ address {
     transition: all 0.3s ease;
     cursor: pointer;
 }
+.poster__link:hover,
+.cta__link:hover {
+    background-color: var(--color-accent-hover);
+}
 .date .icom {
 	width: 12px;
 	height: 14px;
@@ -1630,6 +1653,7 @@ address {
     border-color: var(--color-accent);
     color: var(--color-dark);
     font-weight: 600;
+    transition: all 0.3s ease;
 }
 .pagination__page--active:hover {
     background: var(--color-accent);
@@ -1712,6 +1736,7 @@ address {
     background: var(--color-black);
     color: #ffffff;
     padding: 8px 12px;
+    transition: all 0.3s ease;
 }
 .controls__sort-input option:hover {
     background-color: var(--color-accent);
@@ -1794,10 +1819,13 @@ address {
 }
 .musician-detail__right {
 	flex: 0 0 60%;
+	min-width: 0;
 }
 .musician-detail__wrapper {
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
+    width: 100%;
 	height: 100%;
 }
 .musician-card__top,
@@ -1817,7 +1845,7 @@ address {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	flex: 1 0 130px;
+	flex: 1 0 135px;
 }
 .musician-card__price span,
 .event-card__price span {
@@ -1916,19 +1944,34 @@ address {
 	width: auto;
 }
 .tags {
+	width: 100%;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	flex-wrap: wrap;
-	gap: 15px;
+	flex-wrap: nowrap;
+	gap: 5px;
 	margin: 0 0 25px 0;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	padding-bottom: 5px;
+	scrollbar-width: none;
+	cursor: grab;
+    user-select: none;
+}
+.tags:active {
+    cursor: grabbing;
+}
+.tags::-webkit-scrollbar {
+	display: none;
 }
 .tags span {
 	font-size: 1rem;
 	color: var(--color-accent);
-	padding: 5px 10px;
-	border: 1px solid var(--color-accent);
-	border-radius: 5px;
+	padding: 5px 5px;
+	/* border: 1px solid var(--color-accent);
+	border-radius: 5px; */
+	flex-shrink: 0;
+	white-space: nowrap;
 }
 .musician-detail__tabs {
 	padding: 0;
@@ -2012,6 +2055,13 @@ address {
     height: 100%;
     border: none;
     border-radius: 8px;
+}
+.slider-video iframe {
+    pointer-events: none;
+}
+
+.slider-video iframe.is-active {
+    pointer-events: auto;
 }
 .video__pagination {
     position: relative;
@@ -2313,6 +2363,51 @@ address {
 	line-height: 1.5;
 	color: #ffffff;
 }
+
+/* Simple page */
+article.page {
+	background-color: var(--color-black);
+}
+.entry-header {
+	margin: 40px 0;
+	padding: 0;
+}
+.entry-title {
+	font-size: 20px;
+	color: #ffffff;
+}
+.entry-content {
+	margin: var(--text-margin);
+	padding: 0;
+	color: #ffffff;
+}
+.registration-success {
+    width: 100%;
+    margin: var(--text-margin);
+    padding: 0;
+    text-align: center;
+ }
+.entry-footer {
+	color: var(--color-gray);
+}
+.no-banner {
+	margin: 80px 0 0 0;
+}
+.no-banner .entry-content {
+	padding: 50px 0 30px;
+}
+/* 404 page */
+.error-404.not-found {
+	margin: var(--section-margin);
+	color: var(--color-gray);
+	text-align: center;
+}
+.error-404 .page-title {
+	margin: var(--text-margin);
+}
+.error-404 .error-404_link {
+	margin: 20px 0 0 0;
+}
 /* Form modal */
 .micromodal-slide .modal__container {
     background-color: var(--color-black);
@@ -2456,4 +2551,43 @@ address {
     line-height: 1.4;
     margin: 5px 0 10px;
     padding: 0;
+}
+
+article .um-field-block {
+	padding: 20px 0!important;
+    color: var(--color-gray)!important;
+    font-size: 18px!important;
+}
+article .um-field {
+	padding: 20px 0!important;
+}
+article input[type=submit].um-button, 
+article input[type=submit].um-button:focus {
+    position: relative;
+    display: inline-block;
+    padding: 13px 50px!important;
+    font-weight: 600!important;
+    color: #000;
+    letter-spacing: 1.5px;
+    background-color: var(--color-accent)!important;
+    border-radius: 25px!important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+article .um .um-form input[type=password], 
+article .um .um-form input[type=search], 
+article .um .um-form input[type=tel], 
+article .um .um-form input[type=text], 
+article .um .um-form textarea {
+	height: auto!important;
+    background: rgba(158, 156, 156, 0.1)!important;
+    border: 1px solid rgba(158, 156, 156, 0.3);
+    border-radius: 8px!important;
+    padding: 12px 12px!important;
+    color: var(--color-accent)!important;
+    font-family: 'InterRegular', sans-serif;
+    font-size: 15px!important;
+    font-weight: 500;
+    outline: none!important;
+    transition: all 0.2s ease;
 }

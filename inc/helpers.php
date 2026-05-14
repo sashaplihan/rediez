@@ -23,3 +23,33 @@ function rediez_get_post_views($postID) {
     }
     return $count;
 }
+
+
+/**
+ * Разрешаем протокол viber:// для функции esc_url
+ */
+add_filter( 'kses_allowed_protocols', function ( $protocols ) {
+    $protocols[] = 'viber';
+    return $protocols;
+} );
+
+if ( ! function_exists( 'rediez_get_youtube_embed_url' ) ) {
+    function rediez_get_youtube_embed_url( $url ) {
+        
+        if ( empty( $url ) ) {
+            return '';
+        }
+        
+        // YouTube Shorts: youtube.com/shorts/VIDEO_ID
+        if ( preg_match( '/youtube\.com\/shorts\/([^"&?\/\s]{10,12})/i', $url, $matches ) ) {
+            return 'https://www.youtube.com/embed/' . $matches[1];
+        }
+        
+        // Стандартные форматы: watch?v=, youtu.be/, embed/
+        if ( preg_match( '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{10,12})/i', $url, $matches ) ) {
+            return 'https://www.youtube.com/embed/' . $matches[1];
+        }
+        
+        return '';
+    }
+}

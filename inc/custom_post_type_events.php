@@ -27,7 +27,7 @@ function custom_post_type_events() {
     $args = array(
         'label'               => 'Мероприятия',
         'labels'              => $labels,
-        'supports'            => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+        'supports'            => array( 'title' ),
         'hierarchical'        => false,
         'public'              => true,
         'show_ui'             => true,

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         params.append('paged',  paged || 1);
 
         // Чекбоксы
-        ['event', 'format', 'genre', 'location', 'duration', 'conditions'].forEach(function (group) {
+        ['event', 'format', 'genre', 'performer', 'lineup', 'location', 'duration', 'conditions'].forEach(function (group) {
             filtersForm.querySelectorAll('input[name="' + group + '[]"]:checked').forEach(function (cb) {
                 params.append(group + '[]', cb.value);
             });
@@ -58,8 +58,38 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(function (res) { return res.json(); })
         .then(function (data) {
             if (!data.success) return;
+
             resultsGrid.innerHTML = data.data.html;
             renderPagination(data.data.max_pages, parseInt(data.data.paged));
+
+            const total = parseInt(data.data.found_posts) || 0;
+
+            // Обновляем счётчик найденных мероприятий (БАГ ФИКС)
+            const countEl = document.querySelector('.events-catalog__count');
+            if (countEl) {
+                if (total === 0) {
+                    countEl.style.display = 'none';
+                } else {
+                    countEl.style.display = '';
+                    let label;
+                    const mod10  = total % 10;
+                    const mod100 = total % 100;
+                    if (mod10 === 1 && mod100 !== 11) {
+                        label = 'Найдено <strong>' + total + '</strong> мероприятие';
+                    } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+                        label = 'Найдено <strong>' + total + '</strong> мероприятия';
+                    } else {
+                        label = 'Найдено <strong>' + total + '</strong> мероприятий';
+                    }
+                    countEl.innerHTML = label;
+                }
+            }
+
+            // Обновляем кнопку «Показать (N)»
+            const showBtn = filtersForm.querySelector('.filters__show');
+            if (showBtn) {
+                showBtn.textContent = total ? 'Показать (' + total + ')' : 'Показать';
+            }
         })
         .catch(function (err) {
             console.error('Events filter error:', err);
@@ -181,10 +211,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const priceMin = filtersForm.querySelector('input[name="price_min"]');
             const priceMax = filtersForm.querySelector('input[name="price_max"]');
-            if (priceMin) { priceMin.value = priceMin.min || 0;       priceMin.dispatchEvent(new Event('input', { bubbles: true })); }
-            if (priceMax) { priceMax.value = priceMax.max || 100000;  priceMax.dispatchEvent(new Event('input', { bubbles: true })); }
+            if (priceMin) { priceMin.value = priceMin.min || 0; priceMin.dispatchEvent(new Event('input', { bubbles: true })); }
+            if (priceMax) { priceMax.value = priceMax.max || 10000; priceMax.dispatchEvent(new Event('input', { bubbles: true })); }
 
             doFilter(1);
+        });
+    }
+
+    // Кнопка «Показать (N)» — закрывает панель фильтров на мобилках
+    const showBtn = filtersForm.querySelector('.filters__show');
+    if (showBtn) {
+        showBtn.addEventListener('click', function () {
+            filtersForm.classList.remove('_active');
+            document.body.style.overflow = '';
         });
     }
 

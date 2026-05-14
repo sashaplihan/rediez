@@ -234,7 +234,7 @@
 </div>
 
 <div class="modal micromodal-slide" id="modal-auth" aria-hidden="true">
-    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal__overlay" tabindex="-1">
         <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-auth-title">
             
             <header class="modal__header">

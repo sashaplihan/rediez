@@ -76,9 +76,34 @@ $right_btn_text = carbon_get_the_post_meta( 'hero_right_btn_text' );
                         <?php endif; ?>
                     </div>
 
-                    <?php if ( $right_btn_text ) : ?>
-                        <button class="hero_btn btn--secondary"><?php echo esc_html( $right_btn_text ); ?></button>
-                    <?php endif; ?>
+					<?php if ( is_user_logged_in() ) : 
+						$user        = wp_get_current_user();
+						$is_musician = in_array( 'um_musician', (array) $user->roles );
+						$is_eventer  = in_array( 'um_eventer',  (array) $user->roles );
+
+						if ( $is_musician ) {
+							$profile_url  = admin_url( 'edit.php?post_type=rediez_musicians' );
+							$account_text = 'Мой профиль';
+						} elseif ( $is_eventer ) {
+							$profile_url  = admin_url( 'edit.php?post_type=rediez_events' );
+							$account_text = 'Мои мероприятия';
+						} else {
+							$profile_url  = admin_url();
+							$account_text = 'Админ панель';
+						}
+						?>
+
+						<a href="<?php echo esc_url( $profile_url ); ?>" class="hero_btn btn--secondary">
+							<?php echo esc_html( $account_text ); ?>
+						</a>
+					<?php else : ?>
+						<?php if ( $right_btn_text ) : ?>
+							<button class="hero_btn btn--secondary" data-micromodal-trigger="modal-auth">
+								<?php echo esc_html( $right_btn_text ); ?>
+							</button>
+						<?php endif; ?>
+					<?php endif; ?>
+
                 </div>
             <?php endif; ?>
 

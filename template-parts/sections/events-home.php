@@ -44,9 +44,11 @@ $icon_path = get_template_directory_uri() . '/assets/images/icons/';
         <div class="events__grid">
 
             <?php while ( $events_query->have_posts() ) : $events_query->the_post();
-                $price = carbon_get_the_post_meta( 'crb_event_price' );
-                $date  = carbon_get_the_post_meta( 'crb_event_date' );
-                $date_formatted = $date ? date_i18n( 'd.m.Y H:i', strtotime( $date ) ) : '';
+				$post_id        = get_the_ID();
+				$price          = carbon_get_post_meta( $post_id, 'crb_event_price' );
+				$date           = carbon_get_post_meta( $post_id, 'crb_event_date' );
+				$description    = carbon_get_post_meta( $post_id, 'crb_event_description' );
+				$date_formatted = $date ? date_i18n( 'd.m.Y H:i', strtotime( $date ) ) : '';
             ?>
 
                 <div class="events__item">
@@ -64,9 +66,9 @@ $icon_path = get_template_directory_uri() . '/assets/images/icons/';
 
                             <h3 class="events__name"><?php the_title(); ?></h3>
 
-                            <?php if ( get_the_excerpt() ) : ?>
-                                <p class="events__desc"><?php echo wp_trim_words( get_the_excerpt(), 10, '...' ); ?></p>
-                            <?php endif; ?>
+							<?php if ( $description ) : ?>
+								<p class="events__desc"><?php echo wp_trim_words( esc_html( $description ), 10, '...' ); ?></p>
+							<?php endif; ?>
 
                             <div class="events__bottom">
                                 <span class="events__price">

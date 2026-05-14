@@ -6,67 +6,94 @@
 
 $icon_path = get_template_directory_uri() . '/assets/images/icons/';
 
-// Основные поля
-$price        = carbon_get_the_post_meta( 'crb_event_price' );
-$date         = carbon_get_the_post_meta( 'crb_event_date' );
-$accept_until = carbon_get_the_post_meta( 'crb_event_accept_until' );
-$venue        = carbon_get_the_post_meta( 'crb_event_venue' );
-
-// Set-поля (метки)
-$event_types = carbon_get_the_post_meta( 'crb_event_types' );
-$formats     = carbon_get_the_post_meta( 'crb_event_performance_format' );
-$genres      = carbon_get_the_post_meta( 'crb_event_genre' );
-$locations   = carbon_get_the_post_meta( 'crb_event_location' );
+// Основные поля — единый стиль через carbon_get_post_meta
+$post_id      = get_the_ID();
+$description  = carbon_get_post_meta( $post_id, 'crb_event_description' );
+$price        = carbon_get_post_meta( $post_id, 'crb_event_price' );
+$date         = carbon_get_post_meta( $post_id, 'crb_event_date' );
+$accept_until = carbon_get_post_meta( $post_id, 'crb_event_accept_until' );
+$venue        = carbon_get_post_meta( $post_id, 'crb_event_venue' );
 
 // Форматируем дату для вывода
 $date_formatted         = $date         ? date_i18n( 'd.m.Y H:i', strtotime( $date ) )         : '';
 $accept_until_formatted = $accept_until ? date_i18n( 'd.m.Y H:i', strtotime( $accept_until ) ) : '';
 
-// Метки для тегов
-$event_type_labels = array(
-    'wedding'   => 'Свадьба',
-    'corporate' => 'Корпоратив',
-    'anniversary' => 'Юбилей',
-    'kids'      => 'Детский праздник',
-    'restaurant' => 'Ресторан',
-    'club'      => 'Клуб',
-    'festival'  => 'Фестиваль',
-    'official'  => 'Официальные мероприятия',
-    'studio'    => 'Студийная запись',
+/**
+ * Справочники меток (labels) — синхронизировано с Carbon Fields
+ * Вынесено в массив для удобного обхода
+ */
+$tags_config = array(
+    'crb_event_types' => array(
+        'corporate'    => 'Корпоративное мероприятие',
+        'wedding'      => 'Свадьба, банкет, юбилей',
+        'kids'         => 'Детский праздник',
+        'registration' => 'Выездная регистрация/поздравление',
+        'concert'      => 'Концерт/трибьют',
+        'music'        => 'Музыкальное сопровождение',
+        'dj_set'       => 'DJ-сет',
+        'other'        => 'Другое',
+    ),
+    'crb_event_performer_type' => array(
+        'band'            => 'Группа',
+        'solo'            => 'Сольный артист',
+        'session'         => 'Сессионный музыкант',
+        'vocalist'        => 'Вокалист',
+        'instrumentalist' => 'Инструменталист',
+        'duo'             => 'Дуэт',
+        'trio'            => 'Трио',
+        'quartet'         => 'Квартет',
+        'dj'              => 'DJ',
+        'event_dj'        => 'Event-DJ',
+        'other'           => 'Другое',
+    ),
+    'crb_event_performance_format' => array(
+        'original' => 'Авторский репертуар',
+        'covers'   => 'Кавер',
+    ),
+    'crb_event_genre' => array(
+        'pop'        => 'Поп (популярная музыка, данс-поп, синти-поп, евро-поп)',
+        'rock'       => 'Рок (рок-н-ролл, хард-рок, панк-рок, альтернативный рок, метал)',
+        'blues'      => 'Блюз (кантри-блюз, дельта-блюз, чикагский блюз)',
+        'jazz'       => 'Джаз (свинг, бибоп, лаунж, фьюжн, регтайм)',
+        'rnb'        => 'R&B (ритм-энд-блюз, соул, фанк, contemporary R&B)',
+        'country'    => 'Кантри (вестерн, блюграсс, аутло-кантри)',
+        'reggae'     => 'Регги (ска, рокстеди, даб)',
+        'hiphop'     => 'Хип-хоп (рэп, трэп, осознанный хип-хоп, old school)',
+        'electronic' => 'Электронная музыка (хаус, техно, дабстеп, транс, drum and bass, эмбиент, чилаут, нью-эйдж)',
+        'classical'  => 'Классическая музыка (симфония, опера, камерная, соната)',
+        'folk'       => 'Фолк (народная музыка, акустический фолк, инди-фолк)',
+        'latin'      => 'Латиноамериканская (сальса, самба, реггетон, бачата, танго)',
+        'chanson'    => 'Шансон / авторская песня (французский шансон, русский шансон, бардовская песня)',
+        'other'      => 'Другое',
+    ),
+    'crb_event_lineup' => array(
+        'keys'       => 'Клавишные (рояль, пианино, синтезатор, орган, аккордеон)',
+        'strings'    => 'Струнные (гитара, бас-гитара, скрипка, виолончель, арфа)',
+        'brass'      => 'Духовые (флейта, саксофон, труба, кларнет)',
+        'drums'      => 'Ударные (установка, перкуссия, малый барабан, ханг)',
+        'folk'       => 'Народные (баян, балалайка, домра, цимбалы)',
+        'electronic' => 'Электроника (семплер, драм-машина, midi-клавиши)',
+        'vocal'      => 'Вокал (солист, бэк-вокалист)',
+    ),
+    'crb_event_location' => array(
+        'minsk'   => 'Минск и Минская область',
+        'brest'   => 'Брест и Брестская область',
+        'vitebsk' => 'Витебск и Витебская область',
+        'gomel'   => 'Гомель и Гомельская область',
+        'grodno'  => 'Гродно и Гродненская область',
+        'mogilev' => 'Могилёв и Могилёвская область',
+    ),
 );
 
-$format_labels = array(
-    'covers'       => 'Каверы',
-    'original'     => 'Авторские песни',
-    'instrumental' => 'Инструментал',
-    'dj_set'       => 'DJ-сет',
-    'background'   => 'Фон (background)',
-    'live'         => 'Живой звук',
-    'recording'    => 'Запись в студии',
-);
-
-$genre_labels = array(
-    'pop'        => 'Поп',
-    'rock'       => 'Рок',
-    'jazz'       => 'Джаз',
-    'rap'        => 'Рэп',
-    'electronic' => 'Электронная',
-    'classical'  => 'Классика',
-    'folk'       => 'Народная',
-    'lounge'     => 'Лаунж',
-    'retro'      => 'Ретро',
-);
-
-// Собираем все теги в один массив для вывода
+// Собираем все теги в один массив
 $tags = array();
-foreach ( (array) $event_types as $val ) {
-    if ( isset( $event_type_labels[ $val ] ) ) $tags[] = $event_type_labels[ $val ];
-}
-foreach ( (array) $formats as $val ) {
-    if ( isset( $format_labels[ $val ] ) ) $tags[] = $format_labels[ $val ];
-}
-foreach ( (array) $genres as $val ) {
-    if ( isset( $genre_labels[ $val ] ) ) $tags[] = $genre_labels[ $val ];
+foreach ( $tags_config as $meta_key => $labels ) {
+    $meta_values = (array) carbon_get_the_post_meta( $meta_key );
+    foreach ( $meta_values as $val ) {
+        if ( isset( $labels[ $val ] ) ) {
+            $tags[] = $labels[ $val ];
+        }
+    }
 }
 ?>
 
@@ -107,17 +134,20 @@ foreach ( (array) $genres as $val ) {
 
         <?php if ( ! empty( $tags ) ) : ?>
             <div class="event-card__tags tags">
-                <?php foreach ( $tags as $tag ) : ?>
-                    <span><?php echo esc_html( $tag ); ?></span>
+                <?php foreach ( $tags as $tag ) : 
+                    // Очищаем текст от скобок и лишних пробелов перед ними
+                    $clean_tag = preg_replace('/ \s*\(.*?\)/u', '', $tag); 
+                ?>
+                    <span><?php echo esc_html( trim( $clean_tag ) ); ?></span>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
 
-        <?php if ( get_the_content() ) : ?>
-            <div class="event-card__description">
-                <?php the_content(); ?>
-            </div>
-        <?php endif; ?>
+		<?php if ( $description ) : ?>
+			<div class="event-card__description">
+				<?php echo wp_kses_post( nl2br( esc_html( $description ) ) ); ?>
+			</div>
+		<?php endif; ?>
 
         <div class="event-cart__bottom">
             <?php if ( get_the_date() ) : ?>

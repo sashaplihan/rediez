@@ -6,20 +6,20 @@
  */
 
 // Получаем данные
+$musician_description = carbon_get_the_post_meta( 'crb_musician_description' );
 $price = carbon_get_the_post_meta( 'crb_musician_price' );
 $phone = carbon_get_the_post_meta( 'crb_musician_phone' );
 $email = carbon_get_the_post_meta( 'crb_musician_email' );
 
 // Социальные сети
 $telegram = carbon_get_the_post_meta( 'crb_musician_telegram' );
-$whatsapp = carbon_get_the_post_meta( 'crb_musician_whatsapp' );
+$instagram = carbon_get_the_post_meta( 'crb_musician_instagram' );
 $viber = carbon_get_the_post_meta( 'crb_musician_viber' );
 $tiktok = carbon_get_the_post_meta( 'crb_musician_tiktok' );
 $vk = carbon_get_the_post_meta( 'crb_musician_vk' );
 $ok = carbon_get_the_post_meta( 'crb_musician_ok' );
 
 // Теги
-$event_types = carbon_get_the_post_meta( 'crb_musician_event_types' );
 $performance_format = carbon_get_the_post_meta( 'crb_musician_performance_format' );
 $genres = carbon_get_the_post_meta( 'crb_musician_genre' );
 $performer_types = carbon_get_the_post_meta( 'crb_musician_performer_type' );
@@ -32,59 +32,56 @@ $icon_path = get_template_directory_uri() . '/assets/images/icons/';
 
 // Массив меток для тегов (в порядке как в Carbon Fields)
 $tag_labels = array(
-    'event_types' => array(
-        'wedding' => 'Свадьба',
-        'corporate' => 'Корпоратив',
-        'anniversary' => 'Юбилей',
-        'kids' => 'Детский праздник',
-        'restaurant' => 'Ресторан',
-        'club' => 'Клуб',
-        'festival' => 'Фестиваль',
-        'Official' => 'Официальные мероприятия',
-        'studio' => 'Студийная запись',
-    ),
+
     'performance_format' => array(
-        'covers' => 'Каверы',
-        'original' => 'Авторские песни',
-        'instrumental' => 'Инструментал',
-        'dj_set' => 'DJ-сет',
-        'background' => 'Фон',
-        'live' => 'Живой звук',
+        'original' => 'Авторский репертуар',
+        'covers'   => 'Кавер',
     ),
     'genres' => array(
-        'pop' => 'Поп',
-        'rock' => 'Рок',
-        'jazz' => 'Джаз',
-        'rap' => 'Рэп',
-        'electronic' => 'Электронная',
-        'classical' => 'Классика',
-        'folk' => 'Народная',
-        'lounge' => 'Лаунж',
-        'retro' => 'Ретро, диско',
-        'author' => 'Авторская песня',
+        'pop'        => 'Поп (популярная, данс-, евро-поп…)',
+        'rock'       => 'Рок (рок-н-ролл, хард-рок, альтернатива, панк, метал…)',
+        'blues'      => 'Блюз (кантри-, дельта-, чикагский блюз…)',
+        'jazz'       => 'Джаз (свинг, лаунж…)',
+        'rnb'        => 'R&B (ритм-энд-блюз, соул, фанк…)',
+        'country'    => 'Кантри (вестерн, блюграсс…)',
+        'reggae'     => 'Регги (ска, рокстеди, даб)',
+        'hiphop'     => 'Хип-хоп (рэп, трэп, old school)',
+        'electronic' => 'Электронная музыка (хаус, техно, транс, drum and bass, чилаут…)',
+        'classical'  => 'Классическая музыка (симфония, опера, соната…)',
+        'folk'       => 'Фолк (народная музыка, акустический фолк…)',
+        'latin'      => 'Латиноамериканская (сальса, самба, бачата, танго)',
+        'chanson'    => 'Шансон / авторская песня (французский шансон, русский шансон, бардовская песня)',
+        'other'      => 'Другое',
     ),
     'performer_types' => array(
-        'band' => 'Группа',
-        'solo' => 'Сольный артист',
-        'duo' => 'Дуэт',
-        'dj' => 'DJ',
+        'band'            => 'Группа',
+        'solo'            => 'Сольный артист',
+        'session'         => 'Сессионный музыкант',
+        'vocalist'        => 'Вокалист',
         'instrumentalist' => 'Инструменталист',
-        'session' => 'Сессионный музыкант',
+        'duo'             => 'Дуэт',
+        'trio'            => 'Трио',
+        'quartet'         => 'Квартет',
+        'dj'              => 'DJ',
+        'event_dj'        => 'Event-DJ',
+        'other'           => 'Другое',
     ),
     'lineup' => array(
-        'vocal' => 'Вокал',
-        'brass' => 'Духовые',
-        'strings' => 'Струнные',
-        'drums' => 'Ударные',
-        'electronic' => 'Электронные',
+        'keys'       => 'Клавишные (рояль, пианино, синтезатор, орган, аккордеон)',
+        'strings'    => 'Струнные (гитара, бас-гитара, скрипка, виолончель, арфа)',
+        'brass'      => 'Духовые (флейта, саксофон, труба, кларнет, гобой, тромбон)',
+        'drums'      => 'Ударные (установка, перкуссия, малый барабан, ханг)',
+        'folk'       => 'Народные (баян, балалайка, домра, цимбалы)',
+        'electronic' => 'Электроника (семплер, драм-машина, midi-клавиши)',
+        'vocal'      => 'Вокал (солист, бэк-вокалист)',
     ),
     'locations' => array(
-        'minsk' => 'Минск',
-        'brest' => 'Брест',
-        'vitebsk' => 'Витебск',
-        'gomel' => 'Гомель',
-        'grodno' => 'Гродно',
-        'mogilev' => 'Могилёв',
+        'minsk'   => 'Минск и Минская область',
+        'brest'   => 'Брест и Брестская область',
+        'vitebsk' => 'Витебск и Витебская область',
+        'gomel'   => 'Гомель и Гомельская область',
+        'grodno'  => 'Гродно и Гродненская область',
+        'mogilev' => 'Могилёв и Могилёвская область',
     ),
 );
 
@@ -92,14 +89,6 @@ $tag_labels = array(
 $all_tags = array();
 
 // Добавляем теги в порядке настроек
-if ( $event_types ) {
-    foreach ( $event_types as $tag ) {
-        if ( isset( $tag_labels['event_types'][$tag] ) ) {
-            $all_tags[] = $tag_labels['event_types'][$tag];
-        }
-    }
-}
-
 if ( $performance_format ) {
     foreach ( $performance_format as $tag ) {
         if ( isset( $tag_labels['performance_format'][$tag] ) ) {
@@ -176,25 +165,29 @@ if ( $travel === 'yes' ) {
             </div>
             
             <!-- Теги -->
-            <?php if ( ! empty( $all_tags ) ) : ?>
-                <div class="musician-card__tags tags">
-                    <?php foreach ( $all_tags as $tag ) : ?>
-                        <span><?php echo esc_html( $tag ); ?></span>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+			<?php if ( ! empty( $all_tags ) ) : ?>
+				<div class="musician-card__tags tags">
+					<?php foreach ( $all_tags as $tag ) : 
+						// Регулярка: ищем пробел (необязательно) и текст в скобках
+						// / \s*\(.*?\)/ — удалит "(текст)" и пробелы перед ними
+						$clean_tag = preg_replace('/ \s*\(.*?\)/u', '', $tag); 
+						?>
+						<span><?php echo esc_html( trim($clean_tag) ); ?></span>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
             
             <!-- Описание -->
-            <?php if ( get_the_content() ) : ?>
-                <div class="musician-card__description">
-                    <?php the_content(); ?>
-                </div>
-            <?php endif; ?>
+			<?php if ( ! empty( $musician_description ) ) : ?>
+				<div class="musician-card__description">
+					<?php echo wpautop( esc_html( $musician_description ) ); ?>
+				</div>
+			<?php endif; ?>
             
             <hr>
             
             <!-- Контакты -->
-            <?php if ( $phone || $email || $telegram || $whatsapp || $viber || $tiktok || $vk || $ok ) : ?>
+            <?php if ( $phone || $email || $telegram || $instagram || $viber || $tiktok || $vk || $ok ) : ?>
                 <div class="musician-card__contact contact">
                     <h2>Связаться с нами:</h2>
                     <div class="contact__wrap">
@@ -225,7 +218,7 @@ if ( $travel === 'yes' ) {
                         <?php endif; ?>
                         
                         <!-- Социальные сети -->
-                        <?php if ( $telegram || $whatsapp || $viber || $tiktok || $vk || $ok ) : ?>
+                        <?php if ( $telegram || $instagram || $viber || $tiktok || $vk || $ok ) : ?>
                             <div class="contact__bottom network">
                                 
                                 <?php if ( $telegram ) : ?>
@@ -233,18 +226,16 @@ if ( $travel === 'yes' ) {
                                        class="network__icon" 
                                        target="_blank" 
                                        rel="noopener noreferrer">
-                                        <img src="<?php echo esc_url( $icon_path . 'telegram.svg' ); ?>" alt="Telegram">
+                                        <img src="<?php echo esc_url( $icon_path . 'telegram-plane.svg' ); ?>" alt="Telegram">
                                     </a>
                                 <?php endif; ?>
                                 
-                                <?php if ( $whatsapp ) : 
-                                    $whatsapp_clean = preg_replace( '/[^0-9]/', '', $whatsapp );
-                                    ?>
-                                    <a href="https://wa.me/<?php echo esc_attr( $whatsapp_clean ); ?>" 
+                                <?php if ( $instagram ) : ?>
+                                    <a href="<?php echo esc_url( $instagram ); ?>" 
                                        class="network__icon" 
                                        target="_blank" 
                                        rel="noopener noreferrer">
-                                        <img src="<?php echo esc_url( $icon_path . 'whatsapp.svg' ); ?>" alt="WhatsApp">
+                                        <img src="<?php echo esc_url( $icon_path . 'instagram.svg' ); ?>" alt="Instagram">
                                     </a>
                                 <?php endif; ?>
                                 
@@ -271,7 +262,7 @@ if ( $travel === 'yes' ) {
                                        class="network__icon" 
                                        target="_blank" 
                                        rel="noopener noreferrer">
-                                        <img src="<?php echo esc_url( $icon_path . 'vk.svg' ); ?>" alt="VK">
+                                        <img src="<?php echo esc_url( $icon_path . 'vk-icon.svg' ); ?>" alt="VK">
                                     </a>
                                 <?php endif; ?>
                                 

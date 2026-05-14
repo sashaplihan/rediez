@@ -24,7 +24,7 @@ if ( $show_section ) :
         <section class="poster">
             <div class="container">
                 <div class="poster__header">
-                    <h2 class="poster__title">Интерактивная <span>афиша</span></h2>
+                    <h2 class="poster__title">Афиша <span>событий</span></h2>
                     
                     <a href="<?php echo get_post_type_archive_link( 'rediez_poster' ); ?>" class="title_link btn--primary">
                         <span class="link-title__name">Все</span>
